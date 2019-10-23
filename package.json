@@ -1,0 +1,16 @@
+{
+  "name": "mini-pdf",
+  "version": "0.0.1",
+  "description": "mini-pdf tiny pdf writer in javascript",
+  "main": "./src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/signalwerk/mini-pdf"
+  },
+  "bugs": "https://github.com/signalwerk/mini-pdf/issues",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stefan Huber, Signalwerk GmbH",
+  "license": "MIT"
+}
