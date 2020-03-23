@@ -4,13 +4,13 @@ class Stream {
   }
 
   toString() {
-    let output = []
-    output.push(`  << /Length ${this.content.length} >>`)
-    output.push(`stream`)
-    output.push(`${this.content}`)
-    output.push(`endstream`)
+    let output = [];
+    output.push(`  << /Length ${this.content.length} >>`);
+    output.push(`stream`);
+    output.push(`${this.content}`);
+    output.push(`endstream`);
 
-    return output.join('\n');
+    return output.join("\n");
   }
 }
 

@@ -19,7 +19,9 @@ class Catalog {
   toString() {
     let output = [];
     output.push(`  << /Type /Catalog`);
-    output.push(`     /Pages ${this._pages._obj.id} ${this._pages._obj.generation} R`);
+    output.push(
+      `     /Pages ${this._pages._obj.id} ${this._pages._obj.generation} R`
+    );
     output.push(`  >>`);
     return output.join("\n");
   }

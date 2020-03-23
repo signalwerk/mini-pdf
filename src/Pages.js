@@ -36,7 +36,7 @@ class Pages {
     output.push(`  << /Type /Pages`);
 
     this._pages.forEach(page => {
-      console.log("page", page)
+      console.log("page", page);
       output.push(`     /Kids [${page._obj.id} ${page._obj.generation} R]`);
     });
 

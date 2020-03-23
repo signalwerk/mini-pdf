@@ -3,7 +3,7 @@ class Obj {
     this.id = id || 0;
     this.generation = 0;
     this.content = content || "";
-    this.writer = writer
+    this.writer = writer;
   }
 
   toString() {

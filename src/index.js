@@ -19,17 +19,11 @@ class MiniPdf {
     pages.addPage(page);
     catalog.addPages(pages);
 
-
     let text = new Text("Hello World").fontSize(18).fontFamily("F1");
 
     page.addContent(text);
 
-
     writer.addObj(catalog);
-
-
-
-
 
     // return `${this.writer}`;
     return `${this.writer}`;

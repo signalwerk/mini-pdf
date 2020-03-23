@@ -1,7 +1,7 @@
 import Header from "./Header";
 import Obj from "./Obj";
 
-function pad( num, size) {
+function pad(num, size) {
   var s = `${num}`;
   while (s.length < size) s = `0${s}`;
   return s;
@@ -59,19 +59,19 @@ class Writer {
     length.push(xref.length);
 
     let offset = 0;
-    output.slice(0,this.obj.length).forEach((item, index) => {
+    output.slice(0, this.obj.length).forEach((item, index) => {
       offset += length[index];
       output.push(`${pad(offset, 10)} 00000 n\n`);
     });
 
-let _trailer = []
+    let _trailer = [];
     _trailer.push(`trailer`);
     _trailer.push(`  <<  /Root 1 0 R`);
     _trailer.push(`      /Size 5`);
     _trailer.push(`  >>`);
 
     _trailer.push(`startxref`);
-    _trailer.push(`${offset + length[this.obj.length ]}`);
+    _trailer.push(`${offset + length[this.obj.length]}`);
     _trailer.push(`%%EOF`);
 
     let trailer = this.render(_trailer.join("\n"));

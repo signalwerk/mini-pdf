@@ -28,7 +28,7 @@ const DOC = {
             y2: 0,
             stroke: "black",
             strokeWidth: 1
-          },
+          }
         }
       ]
     }

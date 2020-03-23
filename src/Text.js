@@ -7,7 +7,7 @@ class Text {
     this._fontSize = 12;
     this._fontFamily = "F1";
     this._text = text || "";
-    this._obj = null
+    this._obj = null;
     this._parent = null;
   }
 
@@ -45,8 +45,7 @@ class Text {
     output.push(`    (${this._text}) Tj`);
     output.push(`  ET`);
 
-
-    return `${(new Stream(output.join("\n")))}`;
+    return `${new Stream(output.join("\n"))}`;
   }
 }
 

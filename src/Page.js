@@ -40,7 +40,7 @@ class Page {
     output.push(`           >>`);
     output.push(`       >>`);
 
-console.log("contents", this._contents)
+    console.log("contents", this._contents);
     this._contents.forEach(content => {
       output.push(
         `      /Contents ${content._obj.id} ${content._obj.generation} R`
