@@ -1,6 +1,9 @@
 # ⚠️ NOT READY FOR USE
 
+
 https://github.com/riadvice/AlivePDF/blob/master/alivepdf/src/org/alivepdf/pdf/PDF.as
+pdf go processor: https://github.com/pdfcpu/pdfcpu
+
 ## mini-pdf
 
 tiny pdf writer in javascript

@@ -1,11 +1,14 @@
 const fs = require("fs");
 
+import { PdfArray, toString as ArrToString, generator as Arr } from "./array";
+
 import { Document, Box, AstTypesEnum, AstTypes } from "../data/structure";
 
 const magicNumberHeader = "%¥±ë";
 
 export enum PdfTypeEnum {
   DICTIONARY = "DICTIONARY",
+  ARRAY = "ARRAY",
   NAME = "NAME",
   REFRERENCE = "REFRERENCE",
   STREAM = "STREAM",
@@ -113,6 +116,7 @@ export const Operator = (
 
 export type PdfType =
   | PdfDictonary
+  | PdfArray
   | PdfReference
   | PdfName
   | PdfOperator
@@ -126,13 +130,15 @@ export type PdfTypes = PdfType | Array<PdfType>;
 export const PdfTypeWriter = (obj: PdfTypes): string => {
   switch (typeof obj) {
     case "string":
-      return `(${obj})`;
+      return `(${obj.replace(/([()])/g, "\\$1")})`;
+
     case "number":
       return `${obj}`;
   }
 
+  // if we have multiple commands just do one after the other
   if (Array.isArray(obj)) {
-    return `[${obj.map((item) => `${PdfTypeWriter(item)}`).join(" ")}]`;
+    return `${obj.map((item) => `${PdfTypeWriter(item)}`).join("\n")}`;
   }
 
   switch (obj.type) {
@@ -149,6 +155,8 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
         .join(" ")}`;
     case PdfTypeEnum.NAME:
       return `/${obj.value}`;
+    case PdfTypeEnum.ARRAY:
+      return ArrToString(obj);
     case PdfTypeEnum.PLAIN_CONTENT:
       return `${obj.value}`;
     case PdfTypeEnum.REFRERENCE:
@@ -157,12 +165,12 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
       );
     case PdfTypeEnum.STREAM:
       let content = obj.value.map((item) => PdfTypeWriter(item)).join("\n");
-      return [
-        PdfTypeWriter(Dic([Pair(Name("Length"), content.length)])),
-        PdfTypeWriter(Operator(PdfOperatorEnum.STREAM_START)),
-        PdfTypeWriter(PlainContent(content)),
-        PdfTypeWriter(Operator(PdfOperatorEnum.STREAM_END)),
-      ].join("\n");
+      return PdfTypeWriter([
+        Dic([Pair(Name("Length"), content.length)]),
+        Operator(PdfOperatorEnum.STREAM_START),
+        PlainContent(content),
+        Operator(PdfOperatorEnum.STREAM_END),
+      ]);
   }
 };
 
@@ -174,7 +182,7 @@ export const Pages = (pages: Array<PdfReference>) => {
   return Dic([
     Pair(Name("Type"), Name("Pages")),
     Pair(Name("Count"), pages.length),
-    Pair(Name("Kids"), pages),
+    Pair(Name("Kids"), Arr(pages)),
   ]);
 };
 
@@ -188,8 +196,8 @@ export const Page = (
     Pair(Name("Type"), Name("Page")),
     Pair(Name("Parent"), parent),
     Pair(Name("Resources"), resources),
-    Pair(Name("MediaBox"), [...mediaBox] as Array<number>),
-    Pair(Name("Contents"), contents),
+    Pair(Name("MediaBox"), Arr([...mediaBox] as Array<number>)),
+    Pair(Name("Contents"), Arr(contents)),
   ]);
 };
 
@@ -214,14 +222,14 @@ export const TextLine = ({
   size: number;
   font: string;
   content: string;
-}): PdfStream => {
-  return Stream([
+}): Array<PdfType> => {
+  return [
     Operator(PdfOperatorEnum.TEXT_BEGIN),
     Operator(PdfOperatorEnum.TEXT_FONT, [Name(font), size]),
     Operator(PdfOperatorEnum.TEXT_POSITION, [x, y]),
     Operator(PdfOperatorEnum.TEXT_PAINT, [content]),
     Operator(PdfOperatorEnum.TEXT_END),
-  ]);
+  ];
 };
 
 type Pdf = {
@@ -288,22 +296,21 @@ export const Convert = (obj: AstTypes, parent?: PdfReference) => {
       const { ref: refRes } = addObj(null);
 
       const mediaBox: Box = [0, 1, 10, 20];
-      //   const contents = [Ref(4, 5), Ref(6, 7)];
 
-      const contentItems = [];
+      const { ref: refContent } = addObj(null);
+
+      const values = [];
       const fontItems = [];
 
       obj.children.forEach((item) => {
-        const { ref: refContentItem } = addObj(null);
-        const contentItem = Convert(item, refContentItem) as {
-          value: PdfStream;
+        const contentItem = Convert(item, refContent) as {
+          value: Array<PdfType>;
           fonts: Array<string>;
         };
         fontItems.push(...contentItem.fonts);
-        replaceObj(refContentItem, contentItem.value);
-
-        contentItems.push(refContentItem);
+        values.push(...contentItem.value);
       });
+      replaceObj(refContent, Stream(values));
 
       replaceObj(
         refRes,
@@ -315,7 +322,7 @@ export const Convert = (obj: AstTypes, parent?: PdfReference) => {
         ])
       );
 
-      const page = Page(parent, refRes, obj.attributes.mediaBox, contentItems);
+      const page = Page(parent, refRes, obj.attributes.mediaBox, [refContent]);
 
       return page;
 
