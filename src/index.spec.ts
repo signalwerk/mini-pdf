@@ -140,15 +140,13 @@ test("Generator for TextLine", () => {
     content: "hello world",
   });
 
-  expect(textLine).toMatchObject(
-    Stream([
-      Operator(PdfOperatorEnum.TEXT_BEGIN),
-      Operator(PdfOperatorEnum.TEXT_FONT, [Name("F1"), 18]),
-      Operator(PdfOperatorEnum.TEXT_POSITION, [60, 50]),
-      Operator(PdfOperatorEnum.TEXT_PAINT, ["hello world"]),
-      Operator(PdfOperatorEnum.TEXT_END),
-    ])
-  );
+  expect(textLine).toMatchObject([
+    Operator(PdfOperatorEnum.TEXT_BEGIN),
+    Operator(PdfOperatorEnum.TEXT_FONT, [Name("F1"), 18]),
+    Operator(PdfOperatorEnum.TEXT_POSITION, [60, 50]),
+    Operator(PdfOperatorEnum.TEXT_PAINT, ["hello world"]),
+    Operator(PdfOperatorEnum.TEXT_END),
+  ]);
 });
 
 test("Generator for FontHelvetica", () => {
