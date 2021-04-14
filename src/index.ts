@@ -25,6 +25,10 @@ export enum PdfOperatorEnum {
   TRAILER_TRAILER = "trailer",
   STREAM_START = "stream",
   STREAM_END = "endstream",
+  GRAPHICS_STATE_SAVE = "q",
+  GRAPHICS_STATE_RESTORE = "Q",
+  MATRIX_MODIFY = "cm", // 4.3.3  Graphics State Operators
+  IMAGE_PAINT = "Do",
 }
 
 export type PdfOperator = {
@@ -315,6 +319,92 @@ export const Convert = (obj: AstTypes, parent?: PdfReference) => {
 
       return page;
 
+    case AstTypesEnum.IMAGE:
+      // const { ref: refRes } = addObj(null);
+      // https://blog.idrsolutions.com/2010/09/understanding-the-pdf-file-format-images/
+
+      // const imgData = await TEST()
+      const imgData = {
+        meta: { color: 3, depth: 8, height: 660, width: 1200 },
+      };
+
+      // let content = obj.value.map((item) => PdfTypeWriter(item)).join("\n");
+      let content = "…IMG DATA…";
+      // return [
+      //   PdfTypeWriter(Dic([Pair(Name("Length"), content.length)])),
+      //   PdfTypeWriter(Operator(PdfOperatorEnum.STREAM_START)),
+      //   PdfTypeWriter(PlainContent(content)),
+      //   PdfTypeWriter(Operator(PdfOperatorEnum.STREAM_END)),
+      // ].join("\n");
+
+      const { ref: refImg } = addObj(
+        PlainContent(
+          [
+            PdfTypeWriter(
+              Dic([
+                Pair(Name("Type"), Name("XObject")),
+                Pair(Name("Subtype"), Name("Image")),
+                Pair(Name("BitsPerComponent"), imgData.meta.depth),
+                Pair(Name("Width"), imgData.meta.width),
+                Pair(Name("Height"), imgData.meta.height),
+                Pair(Name("ColorSpace"), Name("DeviceRGB")),
+                Pair(Name("Filter"), Name("DCTDecode")),
+                Pair(Name("Length"), content.length),
+              ])
+            ),
+
+            PdfTypeWriter(Operator(PdfOperatorEnum.STREAM_START)),
+            PdfTypeWriter(PlainContent(content)),
+            PdfTypeWriter(Operator(PdfOperatorEnum.STREAM_END)),
+          ].join("\n")
+        )
+      );
+
+      // ].join("\n")
+
+      // /Type /XObject
+      // /Subtype /Image
+      // /BitsPerComponent 8
+      // /Width 2880
+      // /Height 1493
+      // /ColorSpace /DeviceRGB
+      // /Filter /DCTDecode
+      // /Length 492039
+
+      const { ref: refContentItem } = addObj(
+        Dic([Pair(Name("XObject"), Dic([Pair(Name("I1"), refImg)]))])
+      );
+
+      // 12 0 obj
+      // <<
+      // /ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
+      // /XObject <<
+      // /I3 14 0 R
+      // >>
+      // >>
+      // endobj
+
+      const img = Stream([
+        Operator(PdfOperatorEnum.GRAPHICS_STATE_SAVE),
+        Operator(PdfOperatorEnum.MATRIX_MODIFY, [
+          obj.attributes.width,
+          0,
+          0,
+          obj.attributes.height,
+          obj.attributes.x,
+          obj.attributes.y - obj.attributes.height,
+        ]),
+        Operator(PdfOperatorEnum.IMAGE_PAINT, [Name("I1")]),
+        Operator(PdfOperatorEnum.GRAPHICS_STATE_RESTORE),
+      ]);
+
+      // q
+      // ${width} 0 0 ${height} ${x} ${y - height} cm
+      // /${handle} Do
+      // Q\n`;
+
+      return { value: img };
+
     case AstTypesEnum.TEXT:
       const textLine = TextLine({
         x: obj.attributes.x,
@@ -403,6 +493,85 @@ export const Writer = (doc: Document) => {
 
 const MiniPdf = {
   Writer,
+};
+
+const MARKERS = [
+  0xffc0,
+  0xffc1,
+  0xffc2,
+  0xffc3,
+  0xffc5,
+  0xffc6,
+  0xffc7,
+  0xffc8,
+  0xffc9,
+  0xffca,
+  0xffcb,
+  0xffcc,
+  0xffcd,
+  0xffce,
+  0xffcf,
+];
+
+export function readMeta(buffer) {
+  if (buffer.readUInt16BE(0) !== 0xffd8) {
+    throw new Error("SOI not found in JPEG");
+  }
+
+  let pos = 2;
+  let marker;
+
+  while (pos < buffer.length) {
+    marker = buffer.readUInt16BE(pos);
+    pos += 2;
+    if (MARKERS.includes(marker)) {
+      break;
+    }
+    pos += buffer.readUInt16BE(pos);
+  }
+  if (!MARKERS.includes(marker)) {
+    throw new Error("Invalid JPEG.");
+  }
+
+  return {
+    depth: buffer[pos + 2],
+    width: buffer.readUInt16BE(pos + 5),
+    height: buffer.readUInt16BE(pos + 3),
+    color: buffer[pos + 7],
+  };
+}
+
+// https://github.com/riadvice/AlivePDF/blob/master/alivepdf/src/org/alivepdf/images/JPEGImage.as
+// export default function getJPEG(buffer) {
+//   const meta = readMeta(buffer);
+//   const image = {
+//     Subtype: "Image",
+//     Filter: "DCTDecode",
+//     BitsPerComponent: meta.depth,
+//     Width: meta.width,
+//     Height: meta.height,
+//     ColorSpace: `Device${{ 1: "Gray", 3: "RGB", 4: "CMYK" }[meta.color]}`,
+//     data: buffer,
+//   };
+//   return Promise.resolve(image);
+// }
+
+export const TEST = async () => {
+  const { promises: fs } = require("fs");
+
+  const jpegPath = "./data-in/test.jpg";
+
+  // const fs = require('fs');
+
+  // fs.readFile("./data-in/test.jpg", function (err, data) {
+  //   if (err) throw err;
+  //   // console.log(data.toString());
+  //   console.log(data);
+  // });
+
+  let buffer = await fs.readFile(jpegPath);
+
+  return { meta: readMeta(buffer) };
 };
 
 export default MiniPdf;

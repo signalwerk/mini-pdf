@@ -18,6 +18,12 @@ import {
 } from "./index";
 import DOC, { Box } from "../data/structure";
 
+test("include test", async () => {
+  expect(await TEST()).toMatchObject({
+    meta: { color: 3, depth: 8, height: 660, width: 1200 },
+  });
+});
+
 test("Minimal one test", () => {
   expect(1).toBe(1);
 });

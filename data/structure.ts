@@ -6,9 +6,10 @@ export enum AstTypesEnum {
   TEXT = "TEXT",
   // LINE = "LINE",
   FONT = "FONT",
+  IMAGE = "IMAGE",
 }
 
-export type AstTypes = Document | Viewport | Text;
+export type AstTypes = Document | Viewport | Text | Image;
 
 export type Document = {
   type: AstTypesEnum.DOCUMENT;
@@ -21,12 +22,22 @@ export type Font = {
   id: string;
 };
 
+export type Image = {
+  type: AstTypesEnum.IMAGE;
+  attributes: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
+};
+
 export type Viewport = {
   type: AstTypesEnum.VIEWPORT;
   attributes: {
     mediaBox: Box;
   };
-  children: Array<Text>;
+  children: Array<Text | Image>;
 };
 
 export type Box = FixedSizeArray<4, number>;
@@ -84,6 +95,15 @@ const DOC: Document = {
             size: 18,
             font: "F1",
             content: "hello world",
+          },
+        },
+        {
+          type: AstTypesEnum.IMAGE,
+          attributes: {
+            x: 50,
+            y: 80,
+            width: 100,
+            height: 100,
           },
         },
         // {
