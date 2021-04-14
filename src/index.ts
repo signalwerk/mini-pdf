@@ -122,7 +122,8 @@ export type PdfTypes = PdfType | Array<PdfType>;
 export const PdfTypeWriter = (obj: PdfTypes): string => {
   switch (typeof obj) {
     case "string":
-      return `(${obj})`;
+      return `(${obj.replace(/([()])/g, "\\$1")})`;
+
     case "number":
       return `${obj}`;
   }

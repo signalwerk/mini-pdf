@@ -32,6 +32,10 @@ test("PdfTypeWriter for string", () => {
   expect(`${PdfTypeWriter("Hello World.")}`).toMatch("(Hello World.)");
 });
 
+test("PdfTypeWriter for string with escape", () => {
+  expect(`${PdfTypeWriter("Hello (World).")}`).toMatch("(Hello \\(World\\).");
+});
+
 test("PdfTypeWriter for number", () => {
   expect(`${PdfTypeWriter(5)}`).toMatch("5");
 });
