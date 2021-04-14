@@ -1,11 +1,14 @@
 const fs = require("fs");
 
+import { PdfArray, toString as ArrToString, generator as Arr } from "./array";
+
 import { Document, Box, AstTypesEnum, AstTypes } from "../data/structure";
 
 const magicNumberHeader = "%¥±ë";
 
 export enum PdfTypeEnum {
   DICTIONARY = "DICTIONARY",
+  ARRAY = "ARRAY",
   NAME = "NAME",
   REFRERENCE = "REFRERENCE",
   STREAM = "STREAM",
@@ -109,6 +112,7 @@ export const Operator = (
 
 export type PdfType =
   | PdfDictonary
+  | PdfArray
   | PdfReference
   | PdfName
   | PdfOperator
@@ -129,6 +133,7 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
   }
 
   if (Array.isArray(obj)) {
+    console.log("error", obj);
     return `[${obj.map((item) => `${PdfTypeWriter(item)}`).join(" ")}]`;
   }
 
@@ -146,6 +151,8 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
         .join(" ")}`;
     case PdfTypeEnum.NAME:
       return `/${obj.value}`;
+    case PdfTypeEnum.ARRAY:
+      return ArrToString(obj);
     case PdfTypeEnum.PLAIN_CONTENT:
       return `${obj.value}`;
     case PdfTypeEnum.REFRERENCE:
@@ -171,7 +178,7 @@ export const Pages = (pages: Array<PdfReference>) => {
   return Dic([
     Pair(Name("Type"), Name("Pages")),
     Pair(Name("Count"), pages.length),
-    Pair(Name("Kids"), pages),
+    Pair(Name("Kids"), Arr(pages)),
   ]);
 };
 
@@ -185,8 +192,8 @@ export const Page = (
     Pair(Name("Type"), Name("Page")),
     Pair(Name("Parent"), parent),
     Pair(Name("Resources"), resources),
-    Pair(Name("MediaBox"), [...mediaBox] as Array<number>),
-    Pair(Name("Contents"), contents),
+    Pair(Name("MediaBox"), Arr([...mediaBox] as Array<number>)),
+    Pair(Name("Contents"), Arr(contents)),
   ]);
 };
 

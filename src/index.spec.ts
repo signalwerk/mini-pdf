@@ -16,6 +16,9 @@ import {
   PdfTypeEnum,
   PdfOperatorEnum,
 } from "./index";
+
+import { PdfArray, toString as ArrToString, generator as Arr } from "./array";
+
 import DOC, { Box } from "../data/structure";
 
 test("Minimal one test", () => {
@@ -40,11 +43,6 @@ test("PdfTypeWriter for number", () => {
   expect(`${PdfTypeWriter(5)}`).toMatch("5");
 });
 
-test("PdfTypeWriter for array", () => {
-  expect(`${PdfTypeWriter(["Hello World.", 3, 0])}`).toMatch(
-    "[(Hello World.) 3 0]"
-  );
-});
 test("PdfTypeWriter for minimal dictionary", () => {
   const dic = Dic([Pair(Name("A"), 1)]);
 
@@ -110,7 +108,7 @@ test("Generator for Pages", () => {
     Dic([
       Pair(Name("Type"), Name("Pages")),
       Pair(Name("Count"), 2),
-      Pair(Name("Kids"), pagesRef),
+      Pair(Name("Kids"), Arr(pagesRef)),
     ])
   );
 });
@@ -128,8 +126,8 @@ test("Generator for Page", () => {
       Pair(Name("Type"), Name("Page")),
       Pair(Name("Parent"), parent),
       Pair(Name("Resources"), resources),
-      Pair(Name("MediaBox"), [...mediaBox] as Array<number>),
-      Pair(Name("Contents"), contents),
+      Pair(Name("MediaBox"), Arr([...mediaBox] as Array<number>)),
+      Pair(Name("Contents"), Arr(contents)),
     ])
   );
 });
