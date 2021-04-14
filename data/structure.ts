@@ -22,6 +22,17 @@ export type Font = {
   id: string;
 };
 
+export enum ColorSpace {
+  RGB = "RGB",
+}
+
+export type Source = {
+  colorSpace: ColorSpace;
+  depth: number;
+  width: number;
+  height: number;
+};
+
 export type Image = {
   type: AstTypesEnum.IMAGE;
   attributes: {
@@ -29,6 +40,7 @@ export type Image = {
     y: number;
     width: number;
     height: number;
+    source: Source;
   };
 };
 
@@ -100,10 +112,16 @@ const DOC: Document = {
         {
           type: AstTypesEnum.IMAGE,
           attributes: {
-            x: 50,
-            y: 80,
-            width: 100,
-            height: 100,
+            x: 10,
+            y: 5,
+            width: 120,
+            height: 66,
+            source: {
+              colorSpace: ColorSpace.RGB,
+              depth: 8,
+              width: 1200,
+              height: 660,
+            },
           },
         },
         // {
