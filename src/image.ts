@@ -6,7 +6,7 @@ const ascii85 = require("ascii85");
 import { Image, ColorSpace, Viewport } from "../data/structure";
 import {
   Pair,
-  Name,
+  pdfName,
   PdfTypeWriter,
   Operator,
   PlainContent,
@@ -18,7 +18,7 @@ import { pdfArray } from "./array";
 const ColorSpaceToName = (system: ColorSpace) => {
   switch (system) {
     case ColorSpace.RGB:
-      return Name("DeviceRGB");
+      return pdfName("DeviceRGB");
   }
 };
 
@@ -38,21 +38,21 @@ export const convert = (obj: Image, viewport: Viewport) => {
 
   const refImgNew = [
     Dic([
-      Pair(Name("Type"), Name("XObject")),
-      Pair(Name("Subtype"), Name("Image")),
-      Pair(Name("BitsPerComponent"), obj.attributes.source.depth),
-      Pair(Name("Width"), obj.attributes.source.width),
-      Pair(Name("Height"), obj.attributes.source.height),
+      Pair(pdfName("Type"), pdfName("XObject")),
+      Pair(pdfName("Subtype"), pdfName("Image")),
+      Pair(pdfName("BitsPerComponent"), obj.attributes.source.depth),
+      Pair(pdfName("Width"), obj.attributes.source.width),
+      Pair(pdfName("Height"), obj.attributes.source.height),
       Pair(
-        Name("ColorSpace"),
+        pdfName("ColorSpace"),
         ColorSpaceToName(obj.attributes.source.colorSpace)
       ),
       // Pair(Name("Filter"), Name("DCTDecode")),
       Pair(
-        Name("Filter"),
-        pdfArray([Name("ASCII85Decode"), Name("DCTDecode")])
+        pdfName("Filter"),
+        pdfArray([pdfName("ASCII85Decode"), pdfName("DCTDecode")])
       ),
-      Pair(Name("Length"), content.length),
+      Pair(pdfName("Length"), content.length),
     ]),
 
     Operator(PdfOperatorEnum.STREAM_START),
@@ -73,7 +73,7 @@ export const convert = (obj: Image, viewport: Viewport) => {
         obj.attributes.height -
         obj.attributes.y,
     ]),
-    Operator(PdfOperatorEnum.IMAGE_PAINT, [Name("I1")]),
+    Operator(PdfOperatorEnum.IMAGE_PAINT, [pdfName("I1")]),
     Operator(PdfOperatorEnum.GRAPHICS_STATE_RESTORE),
   ];
 

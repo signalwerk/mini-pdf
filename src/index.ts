@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-import { PdfArray, pdfArrayToString , pdfArray } from "./array";
+import { PdfArray, pdfArrayToString, pdfArray } from "./array";
 import { convert as convertOfImage } from "./image";
 
 import {
@@ -56,6 +56,13 @@ export type PdfName = {
   value: string;
 };
 
+export const pdfName = (name: string): PdfName => ({
+  type: PdfTypeEnum.NAME,
+  value: name,
+});
+
+export const pdfNameToString = (obj) => `(${obj.replace(/([()])/g, "\\$1")})`;
+
 export type PdfStream = {
   type: PdfTypeEnum.STREAM;
   value: Array<PdfType>;
@@ -84,11 +91,6 @@ export type PdfDictonary = {
 export const Dic = (pairs: Array<PdfDictionaryPair>): PdfDictonary => ({
   type: PdfTypeEnum.DICTIONARY,
   pairs,
-});
-
-export const Name = (name: string): PdfName => ({
-  type: PdfTypeEnum.NAME,
-  value: name,
 });
 
 export const Ref = (id: number, generation: number = 0): PdfReference => ({
@@ -137,8 +139,7 @@ export type PdfTypes = PdfType | Array<PdfType>;
 export const PdfTypeWriter = (obj: PdfTypes): string => {
   switch (typeof obj) {
     case "string":
-      return `(${obj.replace(/([()])/g, "\\$1")})`;
-
+      return pdfNameToString(obj);
     case "number":
       return `${obj}`;
   }
@@ -173,7 +174,7 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
     case PdfTypeEnum.STREAM:
       let content = obj.value.map((item) => PdfTypeWriter(item)).join("\n");
       return PdfTypeWriter([
-        Dic([Pair(Name("Length"), content.length)]),
+        Dic([Pair(pdfName("Length"), content.length)]),
         Operator(PdfOperatorEnum.STREAM_START),
         PlainContent(content),
         Operator(PdfOperatorEnum.STREAM_END),
@@ -182,14 +183,17 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
 };
 
 export const Catalog = (pages: PdfReference) => {
-  return Dic([Pair(Name("Type"), Name("Catalog")), Pair(Name("Pages"), pages)]);
+  return Dic([
+    Pair(pdfName("Type"), pdfName("Catalog")),
+    Pair(pdfName("Pages"), pages),
+  ]);
 };
 
 export const Pages = (pages: Array<PdfReference>) => {
   return Dic([
-    Pair(Name("Type"), Name("Pages")),
-    Pair(Name("Count"), pages.length),
-    Pair(Name("Kids"), pdfArray(pages)),
+    Pair(pdfName("Type"), pdfName("Pages")),
+    Pair(pdfName("Count"), pages.length),
+    Pair(pdfName("Kids"), pdfArray(pages)),
   ]);
 };
 
@@ -200,20 +204,20 @@ export const Page = (
   contents: Array<PdfReference>
 ): PdfDictonary => {
   return Dic([
-    Pair(Name("Type"), Name("Page")),
-    Pair(Name("Parent"), parent),
-    Pair(Name("Resources"), resources),
-    Pair(Name("MediaBox"), pdfArray([...mediaBox] as Array<number>)),
-    Pair(Name("Contents"), pdfArray(contents)),
+    Pair(pdfName("Type"), pdfName("Page")),
+    Pair(pdfName("Parent"), parent),
+    Pair(pdfName("Resources"), resources),
+    Pair(pdfName("MediaBox"), pdfArray([...mediaBox] as Array<number>)),
+    Pair(pdfName("Contents"), pdfArray(contents)),
   ]);
 };
 
 export const FontHelvetica = (name: PdfName): PdfDictonary => {
   return Dic([
-    Pair(Name("Type"), Name("Font")),
-    Pair(Name("Subtype"), Name("Type1")),
-    Pair(Name("Name"), name),
-    Pair(Name("BaseFont"), Name("Helvetica")),
+    Pair(pdfName("Type"), pdfName("Font")),
+    Pair(pdfName("Subtype"), pdfName("Type1")),
+    Pair(pdfName("Name"), name),
+    Pair(pdfName("BaseFont"), pdfName("Helvetica")),
   ]);
 };
 
@@ -232,7 +236,7 @@ export const TextLine = ({
 }): Array<PdfType> => {
   return [
     Operator(PdfOperatorEnum.TEXT_BEGIN),
-    Operator(PdfOperatorEnum.TEXT_FONT, [Name(font), size]),
+    Operator(PdfOperatorEnum.TEXT_FONT, [pdfName(font), size]),
     Operator(PdfOperatorEnum.TEXT_POSITION, [x, y]),
     Operator(PdfOperatorEnum.TEXT_PAINT, [content]),
     Operator(PdfOperatorEnum.TEXT_END),
@@ -287,7 +291,7 @@ export const Convert = (
       const pagesRef = [];
 
       obj.fonts.forEach((font) => {
-        const { ref: refFont } = addObj(FontHelvetica(Name(font.id)));
+        const { ref: refFont } = addObj(FontHelvetica(pdfName(font.id)));
 
         PDF.fonts[font.id] = refFont;
       });
@@ -333,23 +337,23 @@ export const Convert = (
         refRes,
         Dic([
           Pair(
-            Name("ProcSet"),
+            pdfName("ProcSet"),
             pdfArray([
-              Name("PDF"),
-              Name("Text"),
-              Name("ImageB"),
-              Name("ImageC"),
-              Name("ImageI"),
+              pdfName("PDF"),
+              pdfName("Text"),
+              pdfName("ImageB"),
+              pdfName("ImageC"),
+              pdfName("ImageI"),
             ])
           ),
 
           Pair(
-            Name("Font"),
-            Dic(fontItems.map((font) => Pair(Name(font), PDF.fonts[font])))
+            pdfName("Font"),
+            Dic(fontItems.map((font) => Pair(pdfName(font), PDF.fonts[font])))
           ),
           Pair(
-            Name("XObject"),
-            Dic(xObjectItems.map((xObject) => Pair(Name("I1"), xObject)))
+            pdfName("XObject"),
+            Dic(xObjectItems.map((xObject) => Pair(pdfName("I1"), xObject)))
           ),
         ])
       );
@@ -440,7 +444,9 @@ export const Writer = (doc: Document) => {
 
   output.push(PdfTypeWriter(Operator(PdfOperatorEnum.TRAILER_TRAILER)));
   output.push(
-    PdfTypeWriter(Dic([Pair(Name("Size"), size), Pair(Name("Root"), Ref(1))]))
+    PdfTypeWriter(
+      Dic([Pair(pdfName("Size"), size), Pair(pdfName("Root"), Ref(1))])
+    )
   );
 
   output.push(PdfTypeWriter(Operator(PdfOperatorEnum.TRAILER_START_XREF)));

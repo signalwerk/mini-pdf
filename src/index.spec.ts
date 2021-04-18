@@ -2,7 +2,7 @@ import {
   Writer,
   PdfTypeWriter,
   Dic,
-  Name,
+  pdfName,
   Ref,
   Stream,
   PlainContent,
@@ -45,13 +45,13 @@ test("PdfTypeWriter for number", () => {
 });
 
 test("PdfTypeWriter for minimal dictionary", () => {
-  const dic = Dic([Pair(Name("A"), 1)]);
+  const dic = Dic([Pair(pdfName("A"), 1)]);
 
   expect(`${PdfTypeWriter(dic)}`).toMatch("<< /A 1 >>");
 });
 
 test("PdfTypeWriter for multi-pair dictionary", () => {
-  const dic = Dic([Pair(Name("A"), 1), Pair(Name("B"), 2)]);
+  const dic = Dic([Pair(pdfName("A"), 1), Pair(pdfName("B"), 2)]);
 
   expect(`${PdfTypeWriter(dic)}`).toMatch("<< /A 1\n/B 2 >>");
 });
@@ -63,7 +63,7 @@ test("PdfTypeWriter for reference", () => {
 });
 
 test("PdfTypeWriter for name", () => {
-  const name = Name("Hello");
+  const name = pdfName("Hello");
 
   expect(`${PdfTypeWriter(name)}`).toMatch("/Hello");
 });
@@ -96,7 +96,7 @@ test("Generator for Catalog", () => {
   const catalog = Catalog(pagesRef);
 
   expect(catalog).toMatchObject(
-    Dic([Pair(Name("Type"), Name("Catalog")), Pair(Name("Pages"), pagesRef)])
+    Dic([Pair(pdfName("Type"), pdfName("Catalog")), Pair(pdfName("Pages"), pagesRef)])
   );
 });
 
@@ -107,9 +107,9 @@ test("Generator for Pages", () => {
 
   expect(pages).toMatchObject(
     Dic([
-      Pair(Name("Type"), Name("Pages")),
-      Pair(Name("Count"), 2),
-      Pair(Name("Kids"), pdfArray(pagesRef)),
+      Pair(pdfName("Type"), pdfName("Pages")),
+      Pair(pdfName("Count"), 2),
+      Pair(pdfName("Kids"), pdfArray(pagesRef)),
     ])
   );
 });
@@ -124,11 +124,11 @@ test("Generator for Page", () => {
 
   expect(page).toMatchObject(
     Dic([
-      Pair(Name("Type"), Name("Page")),
-      Pair(Name("Parent"), parent),
-      Pair(Name("Resources"), resources),
-      Pair(Name("MediaBox"), pdfArray([...mediaBox] as Array<number>)),
-      Pair(Name("Contents"), pdfArray(contents)),
+      Pair(pdfName("Type"), pdfName("Page")),
+      Pair(pdfName("Parent"), parent),
+      Pair(pdfName("Resources"), resources),
+      Pair(pdfName("MediaBox"), pdfArray([...mediaBox] as Array<number>)),
+      Pair(pdfName("Contents"), pdfArray(contents)),
     ])
   );
 });
@@ -143,7 +143,7 @@ test("Generator for TextLine", () => {
 
   expect(textLine).toMatchObject([
     Operator(PdfOperatorEnum.TEXT_BEGIN),
-    Operator(PdfOperatorEnum.TEXT_FONT, [Name("F1"), 18]),
+    Operator(PdfOperatorEnum.TEXT_FONT, [pdfName("F1"), 18]),
     Operator(PdfOperatorEnum.TEXT_POSITION, [60, 50]),
     Operator(PdfOperatorEnum.TEXT_PAINT, ["hello world"]),
     Operator(PdfOperatorEnum.TEXT_END),
@@ -151,14 +151,14 @@ test("Generator for TextLine", () => {
 });
 
 test("Generator for FontHelvetica", () => {
-  const font = FontHelvetica(Name("F1"));
+  const font = FontHelvetica(pdfName("F1"));
 
   expect(font).toMatchObject(
     Dic([
-      Pair(Name("Type"), Name("Font")),
-      Pair(Name("Subtype"), Name("Type1")),
-      Pair(Name("Name"), Name("F1")),
-      Pair(Name("BaseFont"), Name("Helvetica")),
+      Pair(pdfName("Type"), pdfName("Font")),
+      Pair(pdfName("Subtype"), pdfName("Type1")),
+      Pair(pdfName("Name"), pdfName("F1")),
+      Pair(pdfName("BaseFont"), pdfName("Helvetica")),
     ])
   );
 });
