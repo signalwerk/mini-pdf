@@ -5,10 +5,13 @@ export type PdfArray = {
   value: Array<PdfType>;
 };
 
-export const pdfArray = (value: Array<PdfType>): PdfArray => ({
-  type: PdfTypeEnum.ARRAY,
-  value,
-});
+export function pdfArray(value: Array<PdfType>): PdfArray {
+  return {
+    type: PdfTypeEnum.ARRAY,
+    value,
+  };
+}
 
-export const pdfArrayToString = (obj) =>
-  `[${obj.value.map((item) => `${PdfTypeWriter(item)}`).join(" ")}]`;
+export function pdfArrayToString(obj) {
+  return `[${obj.value.map((item) => `${PdfTypeWriter(item)}`).join(" ")}]`;
+}

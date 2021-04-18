@@ -25,14 +25,16 @@ export type PdfOperator = {
   operator: PdfOperatorValues;
 };
 
-export const pdfOperator = (
+export function pdfOperator(
   operator: PdfOperatorValues,
   stack?: Array<PdfTypes>
-): PdfOperator => ({
-  type: PdfTypeEnum.OPERATOR,
-  stack: stack || [],
-  operator,
-});
+): PdfOperator {
+  return {
+    type: PdfTypeEnum.OPERATOR,
+    stack: stack || [],
+    operator,
+  };
+}
 
 export function pdfOperatorToString(obj) {
   return `${[
