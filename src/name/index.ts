@@ -14,5 +14,5 @@ export function pdfName(name: string): PdfName {
 }
 
 export function pdfNameToString(obj) {
-  return `(${obj.replace(/([()])/g, "\\$1")})`;
+  return `/${obj.value}`;
 }

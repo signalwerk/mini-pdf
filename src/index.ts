@@ -10,6 +10,7 @@ import {
   AstTypes,
   Viewport,
 } from "../data/structure";
+import { PdfName, pdfNameToString, pdfName } from "./name";
 
 const magicNumberHeader = "%¥±ë";
 
@@ -50,22 +51,6 @@ export type PdfOperator = {
 export const Header = (major: number = 1, minor: number = 3) => {
   return `%PDF-${major}.${minor}\n${magicNumberHeader}\n\n`;
 };
-
-export type PdfName = {
-  type: PdfTypeEnum.NAME;
-  value: string;
-};
-
-export function pdfName(name: string): PdfName {
-  return ({
-    type: PdfTypeEnum.NAME,
-    value: name,
-  });
-}
-
-export function pdfNameToString(obj) {
-  return `(${obj.replace(/([()])/g, "\\$1")})`;
-}
 
 export type PdfStream = {
   type: PdfTypeEnum.STREAM;
@@ -140,10 +125,14 @@ export type PdfType =
 
 export type PdfTypes = PdfType | Array<PdfType>;
 
+export function pdfstringToString(obj) {
+  return `(${obj.replace(/([()])/g, "\\$1")})`;
+}
+
 export const PdfTypeWriter = (obj: PdfTypes): string => {
   switch (typeof obj) {
     case "string":
-      return pdfNameToString(obj);
+      return pdfstringToString(obj);
     case "number":
       return `${obj}`;
   }
@@ -166,7 +155,7 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
         .filter((item) => !!item)
         .join(" ")}`;
     case PdfTypeEnum.NAME:
-      return `/${obj.value}`;
+      return pdfNameToString(obj)
     case PdfTypeEnum.ARRAY:
       return pdfArrayToString(obj);
     case PdfTypeEnum.PLAIN_CONTENT:

@@ -2,7 +2,6 @@ import {
   Writer,
   PdfTypeWriter,
   Dic,
-  pdfName,
   Ref,
   Stream,
   PlainContent,
@@ -17,6 +16,7 @@ import {
   PdfOperatorEnum,
   PdfReference,
 } from "./index";
+import { pdfName } from "./name";
 
 import { pdfArray } from "./array";
 
@@ -62,12 +62,6 @@ test("PdfTypeWriter for reference", () => {
   expect(`${PdfTypeWriter(ref)}`).toMatch("1 2 R");
 });
 
-test("PdfTypeWriter for name", () => {
-  const name = pdfName("Hello");
-
-  expect(`${PdfTypeWriter(name)}`).toMatch("/Hello");
-});
-
 test("PdfTypeWriter for stream-content", () => {
   const plainContent = PlainContent("10");
 
@@ -96,7 +90,10 @@ test("Generator for Catalog", () => {
   const catalog = Catalog(pagesRef);
 
   expect(catalog).toMatchObject(
-    Dic([Pair(pdfName("Type"), pdfName("Catalog")), Pair(pdfName("Pages"), pagesRef)])
+    Dic([
+      Pair(pdfName("Type"), pdfName("Catalog")),
+      Pair(pdfName("Pages"), pagesRef),
+    ])
   );
 });
 
