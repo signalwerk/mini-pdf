@@ -12,6 +12,6 @@ export function pdfString(value: string): PdfString {
   };
 }
 
-export function pdfStringToString(obj) {
+export function pdfStringToString(obj: PdfString) {
   return `(${obj.value.replace(/([()])/g, "\\$1")})`;
 }

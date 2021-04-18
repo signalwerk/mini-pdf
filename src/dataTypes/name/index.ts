@@ -12,6 +12,6 @@ export function pdfName(name: string): PdfName {
   };
 }
 
-export function pdfNameToString(obj) {
+export function pdfNameToString(obj: PdfName) {
   return `/${obj.value}`;
 }

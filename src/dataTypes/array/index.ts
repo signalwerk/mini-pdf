@@ -12,6 +12,6 @@ export function pdfArray(value: Array<PdfType>): PdfArray {
   };
 }
 
-export function pdfArrayToString(obj) {
+export function pdfArrayToString(obj: PdfArray) {
   return `[${obj.value.map((item) => `${PdfTypeWriter(item)}`).join(" ")}]`;
 }

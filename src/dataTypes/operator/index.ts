@@ -36,7 +36,7 @@ export function pdfOperator(
   };
 }
 
-export function pdfOperatorToString(obj) {
+export function pdfOperatorToString(obj: PdfOperator) {
   return `${[
     obj.stack.map((item) => `${PdfTypeWriter(item)}`).join(" "),
     obj.operator,

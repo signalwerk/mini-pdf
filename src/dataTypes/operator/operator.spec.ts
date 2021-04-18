@@ -2,25 +2,25 @@ import { PdfTypeWriter, PdfTypeEnum } from "../../";
 
 import { pdfOperator, pdfOperatorToString, PdfOperatorValues } from ".";
 
-const value = [42, "10"];
+const value = { operator: PdfOperatorValues.TEXT_FONT, stack: [42, "10"] };
 const str = "42 (10) Tf";
 
 test("Generator for pdfOperator", () => {
-  expect(pdfOperator(PdfOperatorValues.TEXT_FONT, value)).toMatchObject({
+  expect(pdfOperator(value.operator, value.stack)).toMatchObject({
     type: PdfTypeEnum.OPERATOR,
-    stack: value,
-    operator: PdfOperatorValues.TEXT_FONT,
+    stack: value.stack,
+    operator: value.operator,
   });
 });
 
 test("toString for pdfOperator", () => {
   expect(
-    `${pdfOperatorToString(pdfOperator(PdfOperatorValues.TEXT_FONT, value))}`
+    `${pdfOperatorToString(pdfOperator(value.operator, value.stack))}`
   ).toMatch(str);
 });
 
 test("PdfTypeWriter for pdfOperator", () => {
-  expect(
-    `${PdfTypeWriter(pdfOperator(PdfOperatorValues.TEXT_FONT, value))}`
-  ).toMatch(str);
+  expect(`${PdfTypeWriter(pdfOperator(value.operator, value.stack))}`).toMatch(
+    str
+  );
 });

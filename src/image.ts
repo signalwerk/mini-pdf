@@ -4,7 +4,8 @@ const fs = require("fs");
 const ascii85 = require("ascii85");
 
 import { Image, ColorSpace, Viewport } from "../data/structure";
-import { Pair, PdfTypeWriter, PlainContent, Dic } from "./index";
+import { PdfTypeWriter, PlainContent } from "./index";
+import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/dictonary";
 import { pdfOperator, PdfOperatorValues } from "./dataTypes/operator";
 import { pdfName } from "./dataTypes/name";
 import { pdfArray } from "./dataTypes/array";
@@ -31,22 +32,22 @@ export const convert = (obj: Image, viewport: Viewport) => {
   // });
 
   const refImgNew = [
-    Dic([
-      Pair(pdfName("Type"), pdfName("XObject")),
-      Pair(pdfName("Subtype"), pdfName("Image")),
-      Pair(pdfName("BitsPerComponent"), obj.attributes.source.depth),
-      Pair(pdfName("Width"), obj.attributes.source.width),
-      Pair(pdfName("Height"), obj.attributes.source.height),
-      Pair(
+    pdfDictionary([
+      pdfDictionaryPair(pdfName("Type"), pdfName("XObject")),
+      pdfDictionaryPair(pdfName("Subtype"), pdfName("Image")),
+      pdfDictionaryPair(pdfName("BitsPerComponent"), obj.attributes.source.depth),
+      pdfDictionaryPair(pdfName("Width"), obj.attributes.source.width),
+      pdfDictionaryPair(pdfName("Height"), obj.attributes.source.height),
+      pdfDictionaryPair(
         pdfName("ColorSpace"),
         ColorSpaceToName(obj.attributes.source.colorSpace)
       ),
       // Pair(Name("Filter"), Name("DCTDecode")),
-      Pair(
+      pdfDictionaryPair(
         pdfName("Filter"),
         pdfArray([pdfName("ASCII85Decode"), pdfName("DCTDecode")])
       ),
-      Pair(pdfName("Length"), content.length),
+      pdfDictionaryPair(pdfName("Length"), content.length),
     ]),
 
     pdfOperator(PdfOperatorValues.STREAM_START),
