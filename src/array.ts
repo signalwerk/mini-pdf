@@ -5,10 +5,10 @@ export type PdfArray = {
   value: Array<PdfType>;
 };
 
-export const generator = (value: Array<PdfType>): PdfArray => ({
+export const pdfArray = (value: Array<PdfType>): PdfArray => ({
   type: PdfTypeEnum.ARRAY,
   value,
 });
 
-export const toString = (obj) =>
+export const pdfArrayToString = (obj) =>
   `[${obj.value.map((item) => `${PdfTypeWriter(item)}`).join(" ")}]`;

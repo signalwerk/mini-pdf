@@ -18,7 +18,7 @@ import {
   PdfReference,
 } from "./index";
 
-import { PdfArray, toString as ArrToString, generator as Arr } from "./array";
+import { pdfArray } from "./array";
 
 import DOC, { Box } from "../data/structure";
 
@@ -109,7 +109,7 @@ test("Generator for Pages", () => {
     Dic([
       Pair(Name("Type"), Name("Pages")),
       Pair(Name("Count"), 2),
-      Pair(Name("Kids"), Arr(pagesRef)),
+      Pair(Name("Kids"), pdfArray(pagesRef)),
     ])
   );
 });
@@ -127,8 +127,8 @@ test("Generator for Page", () => {
       Pair(Name("Type"), Name("Page")),
       Pair(Name("Parent"), parent),
       Pair(Name("Resources"), resources),
-      Pair(Name("MediaBox"), Arr([...mediaBox] as Array<number>)),
-      Pair(Name("Contents"), Arr(contents)),
+      Pair(Name("MediaBox"), pdfArray([...mediaBox] as Array<number>)),
+      Pair(Name("Contents"), pdfArray(contents)),
     ])
   );
 });

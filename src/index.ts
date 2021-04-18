@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-import { PdfArray, toString as ArrToString, generator as Arr } from "./array";
+import { PdfArray, pdfArrayToString , pdfArray } from "./array";
 import { convert as convertOfImage } from "./image";
 
 import {
@@ -163,7 +163,7 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
     case PdfTypeEnum.NAME:
       return `/${obj.value}`;
     case PdfTypeEnum.ARRAY:
-      return ArrToString(obj);
+      return pdfArrayToString(obj);
     case PdfTypeEnum.PLAIN_CONTENT:
       return `${obj.value}`;
     case PdfTypeEnum.REFRERENCE:
@@ -189,7 +189,7 @@ export const Pages = (pages: Array<PdfReference>) => {
   return Dic([
     Pair(Name("Type"), Name("Pages")),
     Pair(Name("Count"), pages.length),
-    Pair(Name("Kids"), Arr(pages)),
+    Pair(Name("Kids"), pdfArray(pages)),
   ]);
 };
 
@@ -203,8 +203,8 @@ export const Page = (
     Pair(Name("Type"), Name("Page")),
     Pair(Name("Parent"), parent),
     Pair(Name("Resources"), resources),
-    Pair(Name("MediaBox"), Arr([...mediaBox] as Array<number>)),
-    Pair(Name("Contents"), Arr(contents)),
+    Pair(Name("MediaBox"), pdfArray([...mediaBox] as Array<number>)),
+    Pair(Name("Contents"), pdfArray(contents)),
   ]);
 };
 
@@ -334,7 +334,7 @@ export const Convert = (
         Dic([
           Pair(
             Name("ProcSet"),
-            Arr([
+            pdfArray([
               Name("PDF"),
               Name("Text"),
               Name("ImageB"),

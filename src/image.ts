@@ -13,7 +13,7 @@ import {
   Dic,
   PdfOperatorEnum,
 } from "./index";
-import { generator as Arr } from "./array";
+import { pdfArray } from "./array";
 
 const ColorSpaceToName = (system: ColorSpace) => {
   switch (system) {
@@ -48,7 +48,10 @@ export const convert = (obj: Image, viewport: Viewport) => {
         ColorSpaceToName(obj.attributes.source.colorSpace)
       ),
       // Pair(Name("Filter"), Name("DCTDecode")),
-      Pair(Name("Filter"), Arr([Name("ASCII85Decode"), Name("DCTDecode")])),
+      Pair(
+        Name("Filter"),
+        pdfArray([Name("ASCII85Decode"), Name("DCTDecode")])
+      ),
       Pair(Name("Length"), content.length),
     ]),
 
