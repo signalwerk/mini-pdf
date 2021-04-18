@@ -6,7 +6,6 @@ import {
   Stream,
   PlainContent,
   Pair,
-  PdfOperator,
   Catalog,
   Pages,
   Page,
@@ -16,10 +15,9 @@ import {
   PdfOperatorEnum,
   PdfReference,
 } from "./index";
-import { pdfName } from "./name";
-
-import { pdfArray } from "./array";
-
+import { pdfOperator } from "./dataTypes/operator";
+import { pdfName } from "./dataTypes/name";
+import { pdfArray } from "./dataTypes/array";
 import DOC, { Box } from "../data/structure";
 
 test("Minimal one test", () => {
@@ -62,12 +60,6 @@ test("PdfTypeWriter for stream-content", () => {
   const plainContent = PlainContent("10");
 
   expect(`${PdfTypeWriter(plainContent)}`).toMatch("10");
-});
-
-test("PdfTypeWriter for Operator", () => {
-  const operator = PdfOperator(PdfOperatorEnum.TEXT_FONT, [42, "10"]);
-
-  expect(`${PdfTypeWriter(operator)}`).toMatch("42 (10) Tf");
 });
 
 const visualize = (str: string) => str.replace(/ /g, "-").split("\n").join("⏎");
@@ -135,11 +127,11 @@ test("Generator for TextLine", () => {
   });
 
   expect(textLine).toMatchObject([
-    PdfOperator(PdfOperatorEnum.TEXT_BEGIN),
-    PdfOperator(PdfOperatorEnum.TEXT_FONT, [pdfName("F1"), 18]),
-    PdfOperator(PdfOperatorEnum.TEXT_POSITION, [60, 50]),
-    PdfOperator(PdfOperatorEnum.TEXT_PAINT, ["hello world"]),
-    PdfOperator(PdfOperatorEnum.TEXT_END),
+    pdfOperator(PdfOperatorEnum.TEXT_BEGIN),
+    pdfOperator(PdfOperatorEnum.TEXT_FONT, [pdfName("F1"), 18]),
+    pdfOperator(PdfOperatorEnum.TEXT_POSITION, [60, 50]),
+    pdfOperator(PdfOperatorEnum.TEXT_PAINT, ["hello world"]),
+    pdfOperator(PdfOperatorEnum.TEXT_END),
   ]);
 });
 

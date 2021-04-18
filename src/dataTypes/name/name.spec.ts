@@ -1,6 +1,6 @@
-import { PdfTypeWriter, PdfTypeEnum } from "../index";
+import { PdfTypeWriter, PdfTypeEnum } from "../../";
 
-import { pdfName, pdfNameToString } from "../name";
+import { pdfName, pdfNameToString } from ".";
 
 const value = "Hello";
 const str = "/Hello";

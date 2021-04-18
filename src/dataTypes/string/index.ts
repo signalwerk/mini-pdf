@@ -1,4 +1,4 @@
-import { PdfTypeEnum } from "../index";
+import { PdfTypeEnum } from "../../";
 
 export type PdfString = {
   type: PdfTypeEnum.STRING;

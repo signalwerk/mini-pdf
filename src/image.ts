@@ -7,13 +7,13 @@ import { Image, ColorSpace, Viewport } from "../data/structure";
 import {
   Pair,
   PdfTypeWriter,
-  PdfOperator,
   PlainContent,
   Dic,
   PdfOperatorEnum,
 } from "./index";
-import { pdfName } from "./name";
-import { pdfArray } from "./array";
+import { pdfOperator } from "./dataTypes/operator";
+import { pdfName } from "./dataTypes/name";
+import { pdfArray } from "./dataTypes/array";
 
 const ColorSpaceToName = (system: ColorSpace) => {
   switch (system) {
@@ -55,14 +55,14 @@ export const convert = (obj: Image, viewport: Viewport) => {
       Pair(pdfName("Length"), content.length),
     ]),
 
-    PdfOperator(PdfOperatorEnum.STREAM_START),
+    pdfOperator(PdfOperatorEnum.STREAM_START),
     PlainContent(content),
-    PdfOperator(PdfOperatorEnum.STREAM_END),
+    pdfOperator(PdfOperatorEnum.STREAM_END),
   ];
 
   const img = [
-    PdfOperator(PdfOperatorEnum.GRAPHICS_STATE_SAVE),
-    PdfOperator(PdfOperatorEnum.MATRIX_MODIFY, [
+    pdfOperator(PdfOperatorEnum.GRAPHICS_STATE_SAVE),
+    pdfOperator(PdfOperatorEnum.MATRIX_MODIFY, [
       obj.attributes.width,
       0,
       0,
@@ -73,8 +73,8 @@ export const convert = (obj: Image, viewport: Viewport) => {
         obj.attributes.height -
         obj.attributes.y,
     ]),
-    PdfOperator(PdfOperatorEnum.IMAGE_PAINT, [pdfName("I1")]),
-    PdfOperator(PdfOperatorEnum.GRAPHICS_STATE_RESTORE),
+    pdfOperator(PdfOperatorEnum.IMAGE_PAINT, [pdfName("I1")]),
+    pdfOperator(PdfOperatorEnum.GRAPHICS_STATE_RESTORE),
   ];
 
   return { img, refImgNew };

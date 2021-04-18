@@ -1,6 +1,6 @@
-import { PdfTypeWriter, PdfTypeEnum } from "../index";
+import { PdfTypeWriter, PdfTypeEnum } from "../../";
 
-import { pdfArray, pdfArrayToString } from "../array";
+import { pdfArray, pdfArrayToString } from ".";
 
 const value = ["Hello World.", 3, 0];
 const str = "[(Hello World.) 3 0]";

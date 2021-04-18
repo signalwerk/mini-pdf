@@ -1,6 +1,5 @@
 const fs = require("fs");
 
-import { PdfArray, pdfArrayToString, pdfArray } from "./array";
 import { convert as convertOfImage } from "./image";
 
 import {
@@ -10,8 +9,10 @@ import {
   AstTypes,
   Viewport,
 } from "../data/structure";
-import { PdfName, pdfNameToString, pdfName } from "./name";
-import { PdfString, pdfStringToString, pdfString } from "./string";
+import { PdfArray, pdfArrayToString, pdfArray } from "./dataTypes/array";
+import { PdfName, pdfNameToString, pdfName } from "./dataTypes/name";
+import { PdfString, pdfStringToString, pdfString } from "./dataTypes/string";
+import { PdfOperator, pdfOperatorToString, pdfOperator } from "./dataTypes/operator";
 
 const magicNumberHeader = "%¥±ë";
 
@@ -40,15 +41,9 @@ export enum PdfOperatorEnum {
   STREAM_END = "endstream",
   GRAPHICS_STATE_SAVE = "q",
   GRAPHICS_STATE_RESTORE = "Q",
-  MATRIX_MODIFY = "cm", // 4.3.3  Graphics State Operators
+  MATRIX_MODIFY = "cm", // 4.3.3 Graphics State Operators
   IMAGE_PAINT = "Do",
 }
-
-export type PdfOperator = {
-  type: PdfTypeEnum.OPERATOR;
-  stack: Array<PdfTypes>;
-  operator: PdfOperatorEnum;
-};
 
 export const Header = (major: number = 1, minor: number = 3) => {
   return `%PDF-${major}.${minor}\n${magicNumberHeader}\n\n`;
@@ -105,15 +100,6 @@ export const Pair = (key: PdfName, value: PdfTypes): PdfDictionaryPair => ({
   value,
 });
 
-export const PdfOperator = (
-  operator: PdfOperatorEnum,
-  stack?: Array<PdfTypes>
-): PdfOperator => ({
-  type: PdfTypeEnum.OPERATOR,
-  stack: stack || [],
-  operator,
-});
-
 export type PdfType =
   | PdfDictonary
   | PdfArray
@@ -147,12 +133,7 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
         .map((kv) => `${PdfTypeWriter(kv.key)} ${PdfTypeWriter(kv.value)}`)
         .join("\n")} >>`;
     case PdfTypeEnum.OPERATOR:
-      return `${[
-        obj.stack.map((item) => `${PdfTypeWriter(item)}`).join(" "),
-        obj.operator,
-      ]
-        .filter((item) => !!item)
-        .join(" ")}`;
+      return pdfOperatorToString(obj);
     case PdfTypeEnum.NAME:
       return pdfNameToString(obj);
     case PdfTypeEnum.STRING:
@@ -163,15 +144,15 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
       return `${obj.value}`;
     case PdfTypeEnum.REFRERENCE:
       return PdfTypeWriter(
-        PdfOperator(PdfOperatorEnum.OBJECT_REFERENCE, [obj.id, obj.generation])
+        pdfOperator(PdfOperatorEnum.OBJECT_REFERENCE, [obj.id, obj.generation])
       );
     case PdfTypeEnum.STREAM:
       let content = obj.value.map((item) => PdfTypeWriter(item)).join("\n");
       return PdfTypeWriter([
         Dic([Pair(pdfName("Length"), content.length)]),
-        PdfOperator(PdfOperatorEnum.STREAM_START),
+        pdfOperator(PdfOperatorEnum.STREAM_START),
         PlainContent(content),
-        PdfOperator(PdfOperatorEnum.STREAM_END),
+        pdfOperator(PdfOperatorEnum.STREAM_END),
       ]);
   }
 };
@@ -229,11 +210,11 @@ export const TextLine = ({
   content: string;
 }): Array<PdfType> => {
   return [
-    PdfOperator(PdfOperatorEnum.TEXT_BEGIN),
-    PdfOperator(PdfOperatorEnum.TEXT_FONT, [pdfName(font), size]),
-    PdfOperator(PdfOperatorEnum.TEXT_POSITION, [x, y]),
-    PdfOperator(PdfOperatorEnum.TEXT_PAINT, [content]),
-    PdfOperator(PdfOperatorEnum.TEXT_END),
+    pdfOperator(PdfOperatorEnum.TEXT_BEGIN),
+    pdfOperator(PdfOperatorEnum.TEXT_FONT, [pdfName(font), size]),
+    pdfOperator(PdfOperatorEnum.TEXT_POSITION, [x, y]),
+    pdfOperator(PdfOperatorEnum.TEXT_PAINT, [content]),
+    pdfOperator(PdfOperatorEnum.TEXT_END),
   ];
 };
 
@@ -432,18 +413,18 @@ export const Writer = (doc: Document) => {
 
   const size = PDF.objects.length + 1;
 
-  output.push(PdfTypeWriter(PdfOperator(PdfOperatorEnum.TRAILER_XREF)));
+  output.push(PdfTypeWriter(pdfOperator(PdfOperatorEnum.TRAILER_XREF)));
   output.push(PdfTypeWriter(PlainContent(`0 ${size}`)));
   output.push(xref.join("\n"));
 
-  output.push(PdfTypeWriter(PdfOperator(PdfOperatorEnum.TRAILER_TRAILER)));
+  output.push(PdfTypeWriter(pdfOperator(PdfOperatorEnum.TRAILER_TRAILER)));
   output.push(
     PdfTypeWriter(
       Dic([Pair(pdfName("Size"), size), Pair(pdfName("Root"), Ref(1))])
     )
   );
 
-  output.push(PdfTypeWriter(PdfOperator(PdfOperatorEnum.TRAILER_START_XREF)));
+  output.push(PdfTypeWriter(pdfOperator(PdfOperatorEnum.TRAILER_START_XREF)));
   output.push(PdfTypeWriter(PlainContent(`${offset + 1}`)));
 
   output.push("%%EOF");
