@@ -56,12 +56,16 @@ export type PdfName = {
   value: string;
 };
 
-export const pdfName = (name: string): PdfName => ({
-  type: PdfTypeEnum.NAME,
-  value: name,
-});
+export function pdfName(name: string): PdfName {
+  return ({
+    type: PdfTypeEnum.NAME,
+    value: name,
+  });
+}
 
-export const pdfNameToString = (obj) => `(${obj.replace(/([()])/g, "\\$1")})`;
+export function pdfNameToString(obj) {
+  return `(${obj.replace(/([()])/g, "\\$1")})`;
+}
 
 export type PdfStream = {
   type: PdfTypeEnum.STREAM;
