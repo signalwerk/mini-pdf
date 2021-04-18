@@ -6,13 +6,13 @@ const ascii85 = require("ascii85");
 import { Image, ColorSpace, Viewport } from "../data/structure";
 import {
   Pair,
-  pdfName,
   PdfTypeWriter,
-  Operator,
+  PdfOperator,
   PlainContent,
   Dic,
   PdfOperatorEnum,
 } from "./index";
+import { pdfName } from "./name";
 import { pdfArray } from "./array";
 
 const ColorSpaceToName = (system: ColorSpace) => {
@@ -55,14 +55,14 @@ export const convert = (obj: Image, viewport: Viewport) => {
       Pair(pdfName("Length"), content.length),
     ]),
 
-    Operator(PdfOperatorEnum.STREAM_START),
+    PdfOperator(PdfOperatorEnum.STREAM_START),
     PlainContent(content),
-    Operator(PdfOperatorEnum.STREAM_END),
+    PdfOperator(PdfOperatorEnum.STREAM_END),
   ];
 
   const img = [
-    Operator(PdfOperatorEnum.GRAPHICS_STATE_SAVE),
-    Operator(PdfOperatorEnum.MATRIX_MODIFY, [
+    PdfOperator(PdfOperatorEnum.GRAPHICS_STATE_SAVE),
+    PdfOperator(PdfOperatorEnum.MATRIX_MODIFY, [
       obj.attributes.width,
       0,
       0,
@@ -73,8 +73,8 @@ export const convert = (obj: Image, viewport: Viewport) => {
         obj.attributes.height -
         obj.attributes.y,
     ]),
-    Operator(PdfOperatorEnum.IMAGE_PAINT, [pdfName("I1")]),
-    Operator(PdfOperatorEnum.GRAPHICS_STATE_RESTORE),
+    PdfOperator(PdfOperatorEnum.IMAGE_PAINT, [pdfName("I1")]),
+    PdfOperator(PdfOperatorEnum.GRAPHICS_STATE_RESTORE),
   ];
 
   return { img, refImgNew };

@@ -6,7 +6,7 @@ import {
   Stream,
   PlainContent,
   Pair,
-  Operator,
+  PdfOperator,
   Catalog,
   Pages,
   Page,
@@ -31,10 +31,6 @@ test("general initial test", () => {
 });
 
 // PdfTypeWriter
-
-test("PdfTypeWriter for string", () => {
-  expect(`${PdfTypeWriter("Hello World.")}`).toMatch("(Hello World.)");
-});
 
 test("PdfTypeWriter for string with escape", () => {
   expect(`${PdfTypeWriter("Hello (World).")}`).toMatch("(Hello \\(World\\).");
@@ -69,7 +65,7 @@ test("PdfTypeWriter for stream-content", () => {
 });
 
 test("PdfTypeWriter for Operator", () => {
-  const operator = Operator(PdfOperatorEnum.TEXT_FONT, [42, "10"]);
+  const operator = PdfOperator(PdfOperatorEnum.TEXT_FONT, [42, "10"]);
 
   expect(`${PdfTypeWriter(operator)}`).toMatch("42 (10) Tf");
 });
@@ -139,11 +135,11 @@ test("Generator for TextLine", () => {
   });
 
   expect(textLine).toMatchObject([
-    Operator(PdfOperatorEnum.TEXT_BEGIN),
-    Operator(PdfOperatorEnum.TEXT_FONT, [pdfName("F1"), 18]),
-    Operator(PdfOperatorEnum.TEXT_POSITION, [60, 50]),
-    Operator(PdfOperatorEnum.TEXT_PAINT, ["hello world"]),
-    Operator(PdfOperatorEnum.TEXT_END),
+    PdfOperator(PdfOperatorEnum.TEXT_BEGIN),
+    PdfOperator(PdfOperatorEnum.TEXT_FONT, [pdfName("F1"), 18]),
+    PdfOperator(PdfOperatorEnum.TEXT_POSITION, [60, 50]),
+    PdfOperator(PdfOperatorEnum.TEXT_PAINT, ["hello world"]),
+    PdfOperator(PdfOperatorEnum.TEXT_END),
   ]);
 });
 
