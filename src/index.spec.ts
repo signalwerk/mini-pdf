@@ -12,10 +12,9 @@ import {
   FontHelvetica,
   TextLine,
   PdfTypeEnum,
-  PdfOperatorEnum,
   PdfReference,
 } from "./index";
-import { pdfOperator } from "./dataTypes/operator";
+import { pdfOperator, PdfOperatorValues } from "./dataTypes/operator";
 import { pdfName } from "./dataTypes/name";
 import { pdfArray } from "./dataTypes/array";
 import DOC, { Box } from "../data/structure";
@@ -127,11 +126,11 @@ test("Generator for TextLine", () => {
   });
 
   expect(textLine).toMatchObject([
-    pdfOperator(PdfOperatorEnum.TEXT_BEGIN),
-    pdfOperator(PdfOperatorEnum.TEXT_FONT, [pdfName("F1"), 18]),
-    pdfOperator(PdfOperatorEnum.TEXT_POSITION, [60, 50]),
-    pdfOperator(PdfOperatorEnum.TEXT_PAINT, ["hello world"]),
-    pdfOperator(PdfOperatorEnum.TEXT_END),
+    pdfOperator(PdfOperatorValues.TEXT_BEGIN),
+    pdfOperator(PdfOperatorValues.TEXT_FONT, [pdfName("F1"), 18]),
+    pdfOperator(PdfOperatorValues.TEXT_POSITION, [60, 50]),
+    pdfOperator(PdfOperatorValues.TEXT_PAINT, ["hello world"]),
+    pdfOperator(PdfOperatorValues.TEXT_END),
   ]);
 });
 
