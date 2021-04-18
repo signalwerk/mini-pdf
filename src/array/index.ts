@@ -1,4 +1,4 @@
-import { PdfTypeEnum, PdfType, PdfTypeWriter } from "./index";
+import { PdfTypeEnum, PdfType, PdfTypeWriter } from "../index";
 
 export type PdfArray = {
   type: PdfTypeEnum.ARRAY;

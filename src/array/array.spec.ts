@@ -1,6 +1,6 @@
-import { PdfTypeWriter, PdfTypeEnum } from "./index";
+import { PdfTypeWriter, PdfTypeEnum } from "../index";
 
-import { pdfArray, pdfArrayToString } from "./array";
+import { pdfArray, pdfArrayToString } from ".";
 
 test("Generator for PdfArray", () => {
   const value = ["Hello World.", 3, 0];
