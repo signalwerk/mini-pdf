@@ -1,5 +1,4 @@
 import {
-  Writer,
   PdfTypeWriter,
   Ref,
   Stream,
@@ -8,7 +7,6 @@ import {
   Pages,
   Page,
   FontHelvetica,
-  TextLine,
   PdfTypeEnum,
   PdfReference,
 } from "./index";
@@ -17,6 +15,7 @@ import { pdfOperator, PdfOperatorValues } from "./dataTypes/operator";
 import { pdfName } from "./dataTypes/name";
 import { pdfArray } from "./dataTypes/array";
 import DOC, { Box } from "../data/structure";
+import { Writer } from "./writer/";
 
 test("Minimal one test", () => {
   expect(1).toBe(1);
@@ -105,23 +104,6 @@ test("Generator for Page", () => {
       pdfDictionaryPair(pdfName("Contents"), pdfArray(contents)),
     ])
   );
-});
-test("Generator for TextLine", () => {
-  const textLine = TextLine({
-    x: 60,
-    y: 50,
-    size: 18,
-    font: "F1",
-    content: "hello world",
-  });
-
-  expect(textLine).toMatchObject([
-    pdfOperator(PdfOperatorValues.TEXT_BEGIN),
-    pdfOperator(PdfOperatorValues.TEXT_FONT, [pdfName("F1"), 18]),
-    pdfOperator(PdfOperatorValues.TEXT_POSITION, [60, 50]),
-    pdfOperator(PdfOperatorValues.TEXT_PAINT, ["hello world"]),
-    pdfOperator(PdfOperatorValues.TEXT_END),
-  ]);
 });
 
 test("Generator for FontHelvetica", () => {

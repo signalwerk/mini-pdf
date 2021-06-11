@@ -1,14 +1,6 @@
-const fs = require("fs");
-
 import { convert as convertOfImage } from "./image";
 
-import {
-  Document,
-  Box,
-  AstTypesEnum,
-  AstTypes,
-  Viewport,
-} from "../data/structure";
+import { Box, AstTypesEnum, AstTypes, Viewport } from "../data/structure";
 import { PdfArray, pdfArrayToString, pdfArray } from "./dataTypes/array";
 import { PdfName, pdfNameToString, pdfName } from "./dataTypes/name";
 import { PdfString, pdfStringToString, pdfString } from "./dataTypes/string";
@@ -18,12 +10,16 @@ import {
   pdfOperator,
   PdfOperatorValues,
 } from "./dataTypes/operator";
+
 import {
   PdfDictonary,
   PdfDictonaryToString,
   pdfDictionary,
   pdfDictionaryPair,
 } from "./dataTypes/dictonary";
+
+import { TextLine } from "./generators/TextLine";
+import { Writer } from "./writer/";
 
 const magicNumberHeader = "%¥±ë";
 
@@ -174,34 +170,12 @@ export const FontHelvetica = (name: PdfName): PdfDictonary => {
   ]);
 };
 
-export const TextLine = ({
-  x,
-  y,
-  size,
-  font,
-  content,
-}: {
-  x: number;
-  y: number;
-  size: number;
-  font: string;
-  content: string;
-}): Array<PdfType> => {
-  return [
-    pdfOperator(PdfOperatorValues.TEXT_BEGIN),
-    pdfOperator(PdfOperatorValues.TEXT_FONT, [pdfName(font), size]),
-    pdfOperator(PdfOperatorValues.TEXT_POSITION, [x, y]),
-    pdfOperator(PdfOperatorValues.TEXT_PAINT, [content]),
-    pdfOperator(PdfOperatorValues.TEXT_END),
-  ];
-};
-
 type Pdf = {
   fonts: { [key: string]: PdfReference };
   objects: Array<PdfTypes | null>;
 };
 
-const PDF: Pdf = {
+export const PDF: Pdf = {
   fonts: {},
   objects: [],
 };
@@ -354,7 +328,7 @@ function pad(num: number, size: number) {
   return s;
 }
 
-const printDebug = (str: string) => {
+export const printDebug = (str: string) => {
   const lines = str.split("\n");
 
   let offset = 0;
@@ -368,62 +342,12 @@ const printDebug = (str: string) => {
   return outputLines.join("\n");
 };
 
-const xrefWriter = (
+export const xrefWriter = (
   offset: number,
   generation: number = 0,
   used: boolean = true
 ) => {
   return `${pad(offset, 10)} ${pad(generation, 10)} ${used ? "n" : "f"}`;
-};
-
-export const Writer = (doc: Document) => {
-  Convert(doc);
-
-  let output = [];
-  let offset = 0;
-
-  let header = Header();
-  output.push(header);
-  offset = offset + header.length;
-
-  let xref = [];
-  xref.push(xrefWriter(0, 65535, false));
-
-  PDF.objects.forEach((obj, index) => {
-    const strObj = `${index + 1} 0 obj\n${PdfTypeWriter(obj)}\nendobj\n`;
-
-    output.push(strObj);
-    xref.push(xrefWriter(offset + 1));
-    offset = offset + strObj.length + 1;
-  });
-
-  const size = PDF.objects.length + 1;
-
-  output.push(PdfTypeWriter(pdfOperator(PdfOperatorValues.TRAILER_XREF)));
-  output.push(PdfTypeWriter(PlainContent(`0 ${size}`)));
-  output.push(xref.join("\n"));
-
-  output.push(PdfTypeWriter(pdfOperator(PdfOperatorValues.TRAILER_TRAILER)));
-  output.push(
-    PdfTypeWriter(
-      pdfDictionary([
-        pdfDictionaryPair(pdfName("Size"), size),
-        pdfDictionaryPair(pdfName("Root"), Ref(1)),
-      ])
-    )
-  );
-
-  output.push(PdfTypeWriter(pdfOperator(PdfOperatorValues.TRAILER_START_XREF)));
-  output.push(PdfTypeWriter(PlainContent(`${offset + 1}`)));
-
-  output.push("%%EOF");
-
-  const final = output.join("\n");
-
-  fs.writeFileSync("file.txt", printDebug(final));
-  fs.writeFileSync("file.pdf", final);
-
-  return `Hello World.`;
 };
 
 const MiniPdf = {
