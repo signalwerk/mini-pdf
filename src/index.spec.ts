@@ -1,15 +1,14 @@
-import {
-  PdfTypeWriter,
-  Ref,
-  Stream,
-  PlainContent,
-  Catalog,
-  Pages,
-  Page,
-  FontHelvetica,
-  PdfTypeEnum,
-  PdfReference,
-} from "./index";
+import { PlainContent } from "./index";
+import { Catalog } from "./generators/Catalog";
+import { FontHelvetica } from "./generators/FontHelvetica";
+import { Page } from "./generators/Page";
+import { Pages } from "./generators/Pages";
+
+import { PdfTypeWriter } from "./writer/TypeWriter";
+
+import { Stream } from "./dataTypes/stream";
+import { Ref } from "./dataTypes/reference";
+
 import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/dictonary";
 import { pdfOperator, PdfOperatorValues } from "./dataTypes/operator";
 import { pdfName } from "./dataTypes/name";

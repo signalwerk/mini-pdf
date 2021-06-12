@@ -1,16 +1,22 @@
 const fs = require("fs");
 import { Document } from "../../data/structure";
 import { pdfName } from "../dataTypes/name";
-import {
-  pdfOperator,
-  PdfOperatorValues
-} from "../dataTypes/operator";
-import {
-  pdfDictionary,
-  pdfDictionaryPair
-} from "../dataTypes/dictonary";
-import { Convert, Header, xrefWriter, PDF, PdfTypeWriter, PlainContent, Ref, printDebug } from "../index";
+import { pdfOperator, PdfOperatorValues } from "../dataTypes/operator";
+import { pdfDictionary, pdfDictionaryPair } from "../dataTypes/dictonary";
+import { PDF, PlainContent, printDebug } from "../index";
+import { Header } from "../generators/Header";
+import { PdfTypeWriter } from "./TypeWriter";
+import { Ref } from "../dataTypes/reference";
+import { Convert } from "./Convert";
+import { pad } from "../util/pad";
 
+export const xrefWriter = (
+  offset: number,
+  generation: number = 0,
+  used: boolean = true
+) => {
+  return `${pad(offset, 10)} ${pad(generation, 10)} ${used ? "n" : "f"}`;
+};
 
 export const Writer = (doc: Document) => {
   Convert(doc);

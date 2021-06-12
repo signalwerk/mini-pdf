@@ -4,7 +4,8 @@ const fs = require("fs");
 const ascii85 = require("ascii85");
 
 import { Image, ColorSpace, Viewport } from "../data/structure";
-import { PdfTypeWriter, PlainContent } from "./index";
+import { PlainContent } from "./index";
+import { PdfTypeWriter } from "./writer/TypeWriter";
 import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/dictonary";
 import { pdfOperator, PdfOperatorValues } from "./dataTypes/operator";
 import { pdfName } from "./dataTypes/name";

@@ -1,4 +1,5 @@
-import { PdfTypeEnum, PdfTypes, PdfTypeWriter } from "../../";
+import { PdfTypeEnum, PdfTypes } from "../../";
+import { PdfTypeWriter } from "../../writer/TypeWriter";
 
 // TABLE 4.1 Operator categories
 export enum PdfOperatorValues {

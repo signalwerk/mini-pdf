@@ -1,4 +1,6 @@
-import { PdfTypeEnum, PdfTypeWriter, PdfTypes } from "../../index";
+import { PdfTypeEnum, PdfTypes } from "../../index";
+
+import { PdfTypeWriter } from "../../writer/TypeWriter";
 import { PdfName } from "../name";
 
 export type PdfDictionaryPair = {
