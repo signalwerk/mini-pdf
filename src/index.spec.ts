@@ -13,15 +13,10 @@ import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/dictonary";
 import { pdfOperator, PdfOperatorValues } from "./dataTypes/operator";
 import { pdfName } from "./dataTypes/name";
 import { pdfArray } from "./dataTypes/array";
-import DOC, { Box } from "../data/structure";
-import { Writer } from "./writer/";
+import { Box } from "../data/structure";
 
 test("Minimal one test", () => {
   expect(1).toBe(1);
-});
-
-test("general initial test", () => {
-  expect(`${Writer(DOC)}`).toMatch("Hello World.");
 });
 
 // PdfTypeWriter

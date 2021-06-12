@@ -4,6 +4,7 @@ import { PdfString } from "./dataTypes/string";
 import { PdfOperator } from "./dataTypes/operator";
 import { PdfPdf, Pdf } from "./dataTypes/pdf";
 import { pad } from "./util/pad";
+import { PDF } from "./demo";
 
 import { PdfDictonary } from "./dataTypes/dictonary";
 
@@ -45,8 +46,6 @@ export type PdfType =
   | number;
 
 export type PdfTypes = PdfType | Array<PdfType>;
-
-export const PDF: PdfPdf = Pdf();
 
 const countObj = () => {
   return PDF.objects.length;
@@ -107,3 +106,4 @@ const MiniPdf = {
 // };
 
 export default MiniPdf;
+export { Writer };

@@ -8,12 +8,8 @@ import {
   pdfDictionaryPair,
 } from "../dataTypes/dictonary";
 import { TextLine } from "../generators/TextLine";
-import {
-  addObj,
-  replaceObj,
-  PDF,
-  PdfType,
-} from "../index";
+import { addObj, replaceObj, PdfType } from "../index";
+import { PDF } from "../demo";
 import { Catalog } from "../generators/Catalog";
 import { FontHelvetica } from "../generators/FontHelvetica";
 import { Page } from "../generators/Page";
