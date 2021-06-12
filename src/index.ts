@@ -2,16 +2,14 @@ import { PdfArray } from "./dataTypes/array";
 import { PdfName } from "./dataTypes/name";
 import { PdfString } from "./dataTypes/string";
 import { PdfOperator } from "./dataTypes/operator";
+import { PdfPdf, Pdf } from "./dataTypes/pdf";
 import { pad } from "./util/pad";
 
-import {
-  PdfDictonary,
-} from "./dataTypes/dictonary";
+import { PdfDictonary } from "./dataTypes/dictonary";
 
 import { Writer } from "./writer/";
 import { Ref, PdfReference } from "./dataTypes/reference/";
 import { PdfStream } from "./dataTypes/stream";
-
 
 export enum PdfTypeEnum {
   DICTIONARY = "DICTIONARY",
@@ -48,15 +46,7 @@ export type PdfType =
 
 export type PdfTypes = PdfType | Array<PdfType>;
 
-type Pdf = {
-  fonts: { [key: string]: PdfReference };
-  objects: Array<PdfTypes | null>;
-};
-
-export const PDF: Pdf = {
-  fonts: {},
-  objects: [],
-};
+export const PDF: PdfPdf = Pdf();
 
 const countObj = () => {
   return PDF.objects.length;
