@@ -1,10 +1,9 @@
-const fs = require("fs");
 import { Document } from "../../data/structure";
 import { pdfName } from "../dataTypes/name";
 import { pdfOperator, PdfOperatorValues } from "../dataTypes/operator";
 import { pdfDictionary, pdfDictionaryPair } from "../dataTypes/dictonary";
-import { PlainContent, printDebug } from "../index";
-import { PDF } from "../demo";
+import { PdfPdf, Pdf } from "../dataTypes/pdf";
+import { PlainContent } from "../generators/PlainContent";
 import { Header } from "../generators/Header";
 import { PdfTypeWriter } from "./TypeWriter";
 import { Ref } from "../dataTypes/reference";
@@ -13,23 +12,25 @@ import { pad } from "../util/pad";
 
 export const xrefWriter = (
   offset: number,
-  generation: number = 0,
-  used: boolean = true
-) => {
+  generation = 0,
+  used = true
+): string => {
   return `${pad(offset, 10)} ${pad(generation, 10)} ${used ? "n" : "f"}`;
 };
 
-export const Writer = (doc: Document) => {
-  Convert(doc);
+export const Writer = (doc: Document): string => {
+  const PDF: PdfPdf = Pdf();
 
-  let output = [];
+  Convert(PDF, doc);
+
+  const output = [];
   let offset = 0;
 
-  let header = Header();
+  const header = Header();
   output.push(header);
   offset = offset + header.length;
 
-  let xref = [];
+  const xref = [];
   xref.push(xrefWriter(0, 65535, false));
 
   PDF.objects.forEach((obj, index) => {
@@ -63,8 +64,19 @@ export const Writer = (doc: Document) => {
 
   const final = output.join("\n");
 
-  fs.writeFileSync("file.txt", printDebug(final));
-  fs.writeFileSync("file.pdf", final);
+  return final;
+};
 
-  return `Hello World.`;
+export const printDebug = (str: string): string => {
+  const lines = str.split("\n");
+
+  let offset = 0;
+  const outputLines = [];
+
+  lines.forEach((line) => {
+    outputLines.push([pad(offset, 10), line].join("   "));
+    offset = offset + line.length + 1;
+  });
+
+  return outputLines.join("\n");
 };

@@ -2,14 +2,14 @@ import { convert as convertOfImage } from "../image";
 import { AstTypesEnum, AstTypes, Viewport } from "../../data/structure";
 import { pdfArray } from "../dataTypes/array";
 import { pdfName } from "../dataTypes/name";
+import { Ref } from "../dataTypes/reference";
+import { PdfPdf, PdfTypes, PdfType } from "../dataTypes/pdf";
 import {
   PdfDictonary,
   pdfDictionary,
   pdfDictionaryPair,
 } from "../dataTypes/dictonary";
 import { TextLine } from "../generators/TextLine";
-import { addObj, replaceObj, PdfType } from "../index";
-import { PDF } from "../demo";
 import { Catalog } from "../generators/Catalog";
 import { FontHelvetica } from "../generators/FontHelvetica";
 import { Page } from "../generators/Page";
@@ -17,49 +17,72 @@ import { Pages } from "../generators/Pages";
 import { Stream } from "../dataTypes/stream";
 import { PdfReference } from "../dataTypes/reference/";
 
+const countObj = (pdf: PdfPdf) => {
+  return pdf.objects.length;
+};
+
+const addObj = (pdf: PdfPdf, object: PdfTypes) => {
+  const refId = countObj(pdf) + 1;
+
+  pdf.objects.push(object);
+
+  return {
+    ref: Ref(refId),
+  };
+};
+
+const replaceObj = (pdf: PdfPdf, ref: PdfReference, object: PdfTypes) => {
+  pdf.objects[ref.id - 1] = object;
+
+  return {
+    ref,
+  };
+};
+
 export const Convert = (
+  pdf: PdfPdf,
   obj: AstTypes,
   parent?: PdfReference,
   parentObj?: Viewport
 ) => {
   switch (obj.type) {
-    case AstTypesEnum.DOCUMENT:
-      const { ref: refCatalog } = addObj(null);
-      const { ref: pageInventoryRef } = addObj(null);
+    case AstTypesEnum.DOCUMENT: {
+      const { ref: refCatalog } = addObj(pdf, null);
+      const { ref: pageInventoryRef } = addObj(pdf, null);
 
       const catalog = Catalog(pageInventoryRef);
-      replaceObj(refCatalog, catalog);
+      replaceObj(pdf, refCatalog, catalog);
 
       const pagesRef = [];
 
       obj.fonts.forEach((font) => {
-        const { ref: refFont } = addObj(FontHelvetica(pdfName(font.id)));
+        const { ref: refFont } = addObj(pdf, FontHelvetica(pdfName(font.id)));
 
-        PDF.fonts[font.id] = refFont;
+        pdf.fonts[font.id] = refFont;
       });
 
       obj.children.forEach((page) => {
-        const { ref: refPage } = addObj(null);
-        const pageItem = Convert(page, pageInventoryRef) as PdfDictonary;
+        const { ref: refPage } = addObj(pdf, null);
+        const pageItem = Convert(pdf, page, pageInventoryRef) as PdfDictonary;
         pagesRef.push(refPage);
-        replaceObj(refPage, pageItem);
+        replaceObj(pdf, refPage, pageItem);
       });
 
-      replaceObj(pageInventoryRef, Pages(pagesRef));
+      replaceObj(pdf, pageInventoryRef, Pages(pagesRef));
 
       return;
+    }
+    case AstTypesEnum.VIEWPORT: {
+      const { ref: refRes } = addObj(pdf, null);
 
-    case AstTypesEnum.VIEWPORT:
-      const { ref: refRes } = addObj(null);
-
-      const { ref: refContent } = addObj(null);
+      const { ref: refContent } = addObj(pdf, null);
 
       const values = [];
       const fontItems = [];
       const xObjectItems = [];
 
       obj.children.forEach((item) => {
-        const contentItem = Convert(item, refContent, obj) as {
+        const contentItem = Convert(pdf, item, refContent, obj) as {
           value: Array<PdfType>;
           fonts?: Array<string>;
           xObjects?: Array<PdfReference>;
@@ -73,9 +96,10 @@ export const Convert = (
           xObjectItems.push(...contentItem.xObjects);
         }
       });
-      replaceObj(refContent, Stream(values));
+      replaceObj(pdf, refContent, Stream(values));
 
       replaceObj(
+        pdf,
         refRes,
         pdfDictionary([
           pdfDictionaryPair(
@@ -93,7 +117,7 @@ export const Convert = (
             pdfName("Font"),
             pdfDictionary(
               fontItems.map((font) =>
-                pdfDictionaryPair(pdfName(font), PDF.fonts[font])
+                pdfDictionaryPair(pdfName(font), pdf.fonts[font])
               )
             )
           ),
@@ -111,18 +135,18 @@ export const Convert = (
       const page = Page(parent, refRes, obj.attributes.mediaBox, [refContent]);
 
       return page;
-
-    case AstTypesEnum.IMAGE:
-      const { ref: refImg } = addObj(null);
-      // const { ref: refContentItem } = addObj(null);
+    }
+    case AstTypesEnum.IMAGE: {
+      const { ref: refImg } = addObj(pdf, null);
+      // const { ref: refContentItem } = addObj(pdf, null);
       const ImgId = "I1";
       const { img, refImgNew } = convertOfImage(obj, parentObj);
 
-      replaceObj(refImg, refImgNew);
-      // replaceObj(refContentItem, refContentItemNew);
+      replaceObj(pdf, refImg, refImgNew);
+      // replaceObj(pdf, refContentItem, refContentItemNew);
       return { value: img, xObjects: [refImg] };
-
-    case AstTypesEnum.TEXT:
+    }
+    case AstTypesEnum.TEXT: {
       const textLine = TextLine({
         x: obj.attributes.x,
         y: obj.attributes.y,
@@ -132,5 +156,6 @@ export const Convert = (
       });
 
       return { value: textLine, fonts: [obj.attributes.font] };
+    }
   }
 };

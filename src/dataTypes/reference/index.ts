@@ -1,4 +1,4 @@
-import { PdfTypeEnum } from "../../index";
+import { PdfTypeEnum } from "../../dataTypes/pdf";
 
 export type PdfReference = {
   type: PdfTypeEnum.REFRERENCE;

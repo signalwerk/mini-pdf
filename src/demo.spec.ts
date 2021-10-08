@@ -1,6 +1,5 @@
-import DOC from "../data/structure";
-import { Writer } from "./writer/";
+import Demo from "./demo";
 
 test("general initial test", () => {
-  expect(`${Writer(DOC)}`).toMatch("Hello World.");
+  expect(`${Demo()}`).toMatch("Hello World.");
 });

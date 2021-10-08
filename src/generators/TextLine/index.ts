@@ -1,6 +1,6 @@
 import { pdfName } from "../../dataTypes/name";
+import { PdfType } from "../../dataTypes/pdf";
 import { pdfOperator, PdfOperatorValues } from "../../dataTypes/operator";
-import { PdfType } from "../../index";
 
 export const TextLine = ({
   x,

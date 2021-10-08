@@ -1,4 +1,4 @@
-import { PdfTypeEnum } from "../../";
+import { PdfTypeEnum } from "../../dataTypes/pdf";
 import { PdfTypeWriter } from "../../writer/TypeWriter";
 
 import { pdfName, pdfNameToString } from ".";

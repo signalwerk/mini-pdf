@@ -4,7 +4,7 @@ const fs = require("fs");
 const ascii85 = require("ascii85");
 
 import { Image, ColorSpace, Viewport } from "../data/structure";
-import { PlainContent } from "./index";
+import { PlainContent } from "./generators/PlainContent";
 import { PdfTypeWriter } from "./writer/TypeWriter";
 import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/dictonary";
 import { pdfOperator, PdfOperatorValues } from "./dataTypes/operator";
@@ -36,7 +36,10 @@ export const convert = (obj: Image, viewport: Viewport) => {
     pdfDictionary([
       pdfDictionaryPair(pdfName("Type"), pdfName("XObject")),
       pdfDictionaryPair(pdfName("Subtype"), pdfName("Image")),
-      pdfDictionaryPair(pdfName("BitsPerComponent"), obj.attributes.source.depth),
+      pdfDictionaryPair(
+        pdfName("BitsPerComponent"),
+        obj.attributes.source.depth
+      ),
       pdfDictionaryPair(pdfName("Width"), obj.attributes.source.width),
       pdfDictionaryPair(pdfName("Height"), obj.attributes.source.height),
       pdfDictionaryPair(
@@ -77,21 +80,8 @@ export const convert = (obj: Image, viewport: Viewport) => {
 };
 
 const MARKERS = [
-  0xffc0,
-  0xffc1,
-  0xffc2,
-  0xffc3,
-  0xffc5,
-  0xffc6,
-  0xffc7,
-  0xffc8,
-  0xffc9,
-  0xffca,
-  0xffcb,
-  0xffcc,
-  0xffcd,
-  0xffce,
-  0xffcf,
+  0xffc0, 0xffc1, 0xffc2, 0xffc3, 0xffc5, 0xffc6, 0xffc7, 0xffc8, 0xffc9,
+  0xffca, 0xffcb, 0xffcc, 0xffcd, 0xffce, 0xffcf,
 ];
 
 export function readMeta(buffer) {

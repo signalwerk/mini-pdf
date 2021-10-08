@@ -4,15 +4,15 @@ import { pdfStringToString, pdfString } from "../dataTypes/string";
 import {
   pdfOperatorToString,
   pdfOperator,
-  PdfOperatorValues
+  PdfOperatorValues,
 } from "../dataTypes/operator";
 import {
   PdfDictonaryToString,
   pdfDictionary,
-  pdfDictionaryPair
+  pdfDictionaryPair,
 } from "../dataTypes/dictonary";
-import { PdfTypes, PdfTypeEnum, PlainContent } from "../index";
-
+import { PdfTypes, PdfTypeEnum } from "../dataTypes/pdf";
+import { PlainContent } from "../generators/PlainContent";
 
 export const PdfTypeWriter = (obj: PdfTypes): string => {
   switch (typeof obj) {

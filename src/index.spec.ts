@@ -1,8 +1,8 @@
-import { PlainContent } from "./index";
 import { Catalog } from "./generators/Catalog";
 import { FontHelvetica } from "./generators/FontHelvetica";
 import { Page } from "./generators/Page";
 import { Pages } from "./generators/Pages";
+import { PlainContent } from "./generators/PlainContent";
 
 import { PdfTypeWriter } from "./writer/TypeWriter";
 
