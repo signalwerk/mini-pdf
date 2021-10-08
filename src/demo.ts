@@ -19,6 +19,21 @@ const DOC: Document = {
       },
       children: [
         {
+          type: AstTypesEnum.IMAGE,
+          attributes: {
+            x: 10,
+            y: 5,
+            width: 120,
+            height: 66,
+            source: {
+              colorSpace: ColorSpace.RGB,
+              depth: 8,
+              width: 1200,
+              height: 660,
+            },
+          },
+        },
+        {
           type: AstTypesEnum.TEXT,
           attributes: {
             x: 50,
@@ -38,21 +53,7 @@ const DOC: Document = {
             content: "hello world",
           },
         },
-        {
-          type: AstTypesEnum.IMAGE,
-          attributes: {
-            x: 10,
-            y: 5,
-            width: 120,
-            height: 66,
-            source: {
-              colorSpace: ColorSpace.RGB,
-              depth: 8,
-              width: 1200,
-              height: 660,
-            },
-          },
-        },
+
         // {
         //   type: AstTypesEnum.LINE,
         //   attributes: {
