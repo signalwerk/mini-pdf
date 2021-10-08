@@ -1,11 +1,10 @@
 // https://blog.idrsolutions.com/2010/09/understanding-the-pdf-file-format-images/
 
-const fs = require("fs");
-const ascii85 = require("ascii85");
+import * as fs from "fs";
+import * as ascii85 from "ascii85";
 
 import { Image, ColorSpace, Viewport } from "../data/structure";
 import { PlainContent } from "./generators/PlainContent";
-import { PdfTypeWriter } from "./writer/TypeWriter";
 import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/dictonary";
 import { pdfOperator, PdfOperatorValues } from "./dataTypes/operator";
 import { pdfName } from "./dataTypes/name";
@@ -21,9 +20,9 @@ const ColorSpaceToName = (system: ColorSpace) => {
 export const convert = (obj: Image, viewport: Viewport) => {
   const contentBuff = fs.readFileSync("./data-in/test.jpg");
 
-  var buf = ascii85.encode(contentBuff);
+  const buf = ascii85.encode(contentBuff);
 
-  let content = buf.toString();
+  const content = buf.toString();
   //   let content = "…IMG DATA…";
 
   // fs.readFile("./data-in/test.jpg", function (err, data) {

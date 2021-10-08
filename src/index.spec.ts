@@ -10,7 +10,6 @@ import { Stream } from "./dataTypes/stream";
 import { Ref } from "./dataTypes/reference";
 
 import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/dictonary";
-import { pdfOperator, PdfOperatorValues } from "./dataTypes/operator";
 import { pdfName } from "./dataTypes/name";
 import { pdfArray } from "./dataTypes/array";
 import { Box } from "../data/structure";
@@ -40,8 +39,6 @@ test("PdfTypeWriter for stream-content", () => {
 
   expect(`${PdfTypeWriter(plainContent)}`).toMatch("10");
 });
-
-const visualize = (str: string) => str.replace(/ /g, "-").split("\n").join("⏎");
 
 test("PdfTypeWriter for stream", () => {
   const stream = Stream([10]);

@@ -6,7 +6,7 @@ export type PdfReference = {
   generation: number;
 };
 
-export const Ref = (id: number, generation: number = 0): PdfReference => ({
+export const Ref = (id: number, generation = 0): PdfReference => ({
   type: PdfTypeEnum.REFRERENCE,
   id,
   generation,

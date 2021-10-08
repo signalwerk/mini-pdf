@@ -47,13 +47,14 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
           obj.generation,
         ])
       );
-    case PdfTypeEnum.STREAM:
-      let content = obj.value.map((item) => PdfTypeWriter(item)).join("\n");
+    case PdfTypeEnum.STREAM: {
+      const content = obj.value.map((item) => PdfTypeWriter(item)).join("\n");
       return PdfTypeWriter([
         pdfDictionary([pdfDictionaryPair(pdfName("Length"), content.length)]),
         pdfOperator(PdfOperatorValues.STREAM_START),
         PlainContent(content),
         pdfOperator(PdfOperatorValues.STREAM_END),
       ]);
+    }
   }
 };

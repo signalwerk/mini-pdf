@@ -139,7 +139,6 @@ export const Convert = (
     case AstTypesEnum.IMAGE: {
       const { ref: refImg } = addObj(pdf, null);
       // const { ref: refContentItem } = addObj(pdf, null);
-      const ImgId = "I1";
       const { img, refImgNew } = convertOfImage(obj, parentObj);
 
       replaceObj(pdf, refImg, refImgNew);

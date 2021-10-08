@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import { Writer, printDebug } from "./writer/";
-import { Ref, PdfReference } from "./dataTypes/reference/";
 import { Document, AstTypesEnum, ColorSpace } from "../data/structure";
 
 const DOC: Document = {
