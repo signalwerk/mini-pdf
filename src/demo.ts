@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { Writer, printDebug } from "./writer/";
-import { DOC } from "./examples/Ast/demo";
+import { DOC } from "./examples/Ast/PdfDoc";
 
 const Demo = () => {
   const final = Writer(DOC);

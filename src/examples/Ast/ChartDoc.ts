@@ -1,5 +1,4 @@
 import { Document } from "../../dataTypes/Ast/Document";
-import { ColorSpace } from "../../dataTypes/Ast/ColorSpace";
 import { AstTypesEnum } from "../../dataTypes/Ast";
 
 export const DOC: Document = {
@@ -21,33 +20,31 @@ export const DOC: Document = {
           type: AstTypesEnum.TEXT,
           attributes: {
             x: 50,
-            y: 50,
-            size: 18,
-            font: "F1",
-            content: "next hello world",
-          },
-        },
-        {
-          type: AstTypesEnum.TEXT,
-          attributes: {
-            x: 50,
             y: 80,
             size: 18,
             font: "F1",
             content: "hello world",
           },
         },
-        // {
-        //   type: AstTypesEnum.LINE,
-        //   attributes: {
-        //     x1: 0,
-        //     y1: 0,
-        //     x2: 0,
-        //     y2: 0,
-        //     // stroke: "black",
-        //     // strokeWidth: 1,
-        //   },
-        // },
+        {
+          type: AstTypesEnum.LINE,
+          attributes: {
+            start: {
+              type: AstTypesEnum.POINT,
+              attributes: {
+                x: 50,
+                y: 80,
+              },
+            },
+            end: {
+              type: AstTypesEnum.POINT,
+              attributes: {
+                x: 50,
+                y: 80,
+              },
+            },
+          },
+        },
       ],
     },
   ],
