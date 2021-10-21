@@ -1,21 +1,22 @@
 import { convert as convertOfImage } from "../image";
-import { AstTypesEnum, AstTypes, Viewport } from "../../data/structure";
-import { pdfArray } from "../dataTypes/array";
-import { pdfName } from "../dataTypes/name";
-import { Ref } from "../dataTypes/reference";
-import { PdfPdf, PdfTypes, PdfType } from "../dataTypes/pdf";
+import { Viewport } from "../dataTypes/Ast/Viewport";
+import { AstTypesEnum, AstTypes } from "../dataTypes/Ast/";
+import { pdfArray } from "../dataTypes/pdf/array";
+import { pdfName } from "../dataTypes/pdf/name";
+import { Ref } from "../dataTypes/pdf/reference";
+import { PdfPdf, PdfTypes, PdfType } from "../dataTypes/pdf/";
 import {
   PdfDictonary,
   pdfDictionary,
   pdfDictionaryPair,
-} from "../dataTypes/dictonary";
+} from "../dataTypes/pdf/dictonary";
 import { TextLine } from "../generators/TextLine";
 import { Catalog } from "../generators/Catalog";
 import { FontHelvetica } from "../generators/FontHelvetica";
 import { Page } from "../generators/Page";
 import { Pages } from "../generators/Pages";
-import { Stream } from "../dataTypes/stream";
-import { PdfReference } from "../dataTypes/reference/";
+import { Stream } from "../dataTypes/pdf/stream";
+import { PdfReference } from "../dataTypes/pdf/reference/";
 
 const countObj = (pdf: PdfPdf) => {
   return pdf.objects.length;

@@ -1,4 +1,4 @@
-import { PdfTypeEnum, PdfType } from "../../dataTypes/pdf";
+import { PdfTypeEnum, PdfType } from "..";
 
 
 export type PdfStream = {

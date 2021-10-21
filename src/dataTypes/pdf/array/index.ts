@@ -1,6 +1,6 @@
-import { PdfTypeEnum, PdfType } from "../../dataTypes/pdf";
+import { PdfTypeEnum, PdfType } from "..";
 
-import { PdfTypeWriter } from "../../writer/TypeWriter";
+import { PdfTypeWriter } from "../../../writer/TypeWriter";
 
 export type PdfArray = {
   type: PdfTypeEnum.ARRAY;

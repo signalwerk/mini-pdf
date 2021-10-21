@@ -1,16 +1,16 @@
-import { pdfArrayToString } from "../dataTypes/array";
-import { pdfNameToString, pdfName } from "../dataTypes/name";
-import { pdfStringToString, pdfString } from "../dataTypes/string";
+import { pdfArrayToString } from "../dataTypes/pdf/array";
+import { pdfNameToString, pdfName } from "../dataTypes/pdf/name";
+import { pdfStringToString, pdfString } from "../dataTypes/pdf/string";
 import {
   pdfOperatorToString,
   pdfOperator,
   PdfOperatorValues,
-} from "../dataTypes/operator";
+} from "../dataTypes/pdf/operator";
 import {
   PdfDictonaryToString,
   pdfDictionary,
   pdfDictionaryPair,
-} from "../dataTypes/dictonary";
+} from "../dataTypes/pdf/dictonary";
 import { PdfTypes, PdfTypeEnum } from "../dataTypes/pdf";
 import { PlainContent } from "../generators/PlainContent";
 

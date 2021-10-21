@@ -1,4 +1,4 @@
-import { PdfTypeEnum, PdfTypes } from "../pdf/index";
+import { PdfTypeEnum, PdfTypes } from "..";
 
 
 export type PdfPlainContent = {

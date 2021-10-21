@@ -1,10 +1,10 @@
-import { pdfArray } from "../../dataTypes/array";
-import { pdfName } from "../../dataTypes/name";
+import { pdfArray } from "../../dataTypes/pdf/array";
+import { pdfName } from "../../dataTypes/pdf/name";
 import {
   pdfDictionary,
   pdfDictionaryPair
-} from "../../dataTypes/dictonary";
-import { PdfReference } from "../../dataTypes/reference";
+} from "../../dataTypes/pdf/dictonary";
+import { PdfReference } from "../../dataTypes/pdf/reference";
 
 
 export const Pages = (pages: Array<PdfReference>) => {

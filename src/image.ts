@@ -3,12 +3,15 @@
 import * as fs from "fs";
 import * as ascii85 from "ascii85";
 
-import { Image, ColorSpace, Viewport } from "../data/structure";
+import { Viewport } from "./dataTypes/Ast/Viewport";
+import { ColorSpace } from "./dataTypes/Ast/ColorSpace";
+import { Image } from "./dataTypes/Ast/Image";
+
 import { PlainContent } from "./generators/PlainContent";
-import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/dictonary";
-import { pdfOperator, PdfOperatorValues } from "./dataTypes/operator";
-import { pdfName } from "./dataTypes/name";
-import { pdfArray } from "./dataTypes/array";
+import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/pdf/dictonary";
+import { pdfOperator, PdfOperatorValues } from "./dataTypes/pdf/operator";
+import { pdfName } from "./dataTypes/pdf/name";
+import { pdfArray } from "./dataTypes/pdf/array";
 
 const ColorSpaceToName = (system: ColorSpace) => {
   switch (system) {

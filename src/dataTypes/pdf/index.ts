@@ -1,11 +1,11 @@
-import { PdfReference } from "../reference";
-import { PdfArray } from "../array";
-import { PdfName } from "../name";
-import { PdfString } from "../string";
-import { PdfOperator } from "../operator";
-import { PdfDictonary } from "../dictonary";
-import { PdfStream } from "../stream";
-import { PdfPlainContent } from "../plainContent";
+import { PdfReference } from "./reference";
+import { PdfArray } from "./array";
+import { PdfName } from "./name";
+import { PdfString } from "./string";
+import { PdfOperator } from "./operator";
+import { PdfDictonary } from "./dictonary";
+import { PdfStream } from "./stream";
+import { PdfPlainContent } from "./plainContent";
 
 export type PdfPdf = {
   fonts: { [key: string]: PdfReference };

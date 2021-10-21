@@ -1,12 +1,12 @@
-import { Document } from "../../data/structure";
-import { pdfName } from "../dataTypes/name";
-import { pdfOperator, PdfOperatorValues } from "../dataTypes/operator";
-import { pdfDictionary, pdfDictionaryPair } from "../dataTypes/dictonary";
-import { PdfPdf, Pdf } from "../dataTypes/pdf";
+import { Document } from "../dataTypes/Ast/Document";
+import { pdfName } from "../dataTypes/pdf/name";
+import { pdfOperator, PdfOperatorValues } from "../dataTypes/pdf/operator";
+import { pdfDictionary, pdfDictionaryPair } from "../dataTypes/pdf/dictonary";
+import { PdfPdf, Pdf } from "../dataTypes/pdf/";
 import { PlainContent } from "../generators/PlainContent";
 import { Header } from "../generators/Header";
 import { PdfTypeWriter } from "./TypeWriter";
-import { Ref } from "../dataTypes/reference";
+import { Ref } from "../dataTypes/pdf/reference";
 import { Convert } from "./Convert";
 import { pad } from "../util/pad";
 

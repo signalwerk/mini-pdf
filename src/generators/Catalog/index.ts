@@ -1,9 +1,9 @@
-import { pdfName } from "../../dataTypes/name";
+import { pdfName } from "../../dataTypes/pdf/name";
 import {
   pdfDictionary,
   pdfDictionaryPair
-} from "../../dataTypes/dictonary";
-import { PdfReference } from "../../dataTypes/reference";
+} from "../../dataTypes/pdf/dictonary";
+import { PdfReference } from "../../dataTypes/pdf/reference";
 
 
 export const Catalog = (pages: PdfReference) => {
