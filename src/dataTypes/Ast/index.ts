@@ -7,7 +7,6 @@ export enum AstTypesEnum {
   DOCUMENT = "DOCUMENT",
   VIEWPORT = "VIEWPORT",
   TEXT = "TEXT",
-  // LINE = "LINE",
   FONT = "FONT",
   IMAGE = "IMAGE",
   LINE = "LINE",

@@ -1,4 +1,3 @@
-
 export enum ColorSpace {
-  RGB = "RGB"
+  RGB = "RGB",
 }
