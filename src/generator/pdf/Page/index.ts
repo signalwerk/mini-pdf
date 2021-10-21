@@ -1,12 +1,12 @@
-import { Box } from "../../dataTypes/Ast/Box";
-import { pdfArray } from "../../dataTypes/pdf/array";
-import { pdfName } from "../../dataTypes/pdf/name";
+import { Box } from "../../../dataTypes/Ast/Box";
+import { pdfArray } from "../../../dataTypes/pdf/array";
+import { pdfName } from "../../../dataTypes/pdf/name";
 import {
   PdfDictonary,
   pdfDictionary,
   pdfDictionaryPair,
-} from "../../dataTypes/pdf/dictonary";
-import { PdfReference } from "../../dataTypes/pdf/reference";
+} from "../../../dataTypes/pdf/dictonary";
+import { PdfReference } from "../../../dataTypes/pdf/reference";
 
 export const Page = (
   parent: PdfReference,

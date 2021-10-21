@@ -12,7 +12,7 @@ import {
   pdfDictionaryPair,
 } from "../dataTypes/pdf/dictonary";
 import { PdfTypes, PdfTypeEnum } from "../dataTypes/pdf";
-import { PlainContent } from "../generators/PlainContent";
+import { PlainContent } from "../generator/pdf/PlainContent";
 
 export const PdfTypeWriter = (obj: PdfTypes): string => {
   switch (typeof obj) {

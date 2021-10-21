@@ -10,11 +10,11 @@ import {
   pdfDictionary,
   pdfDictionaryPair,
 } from "../dataTypes/pdf/dictonary";
-import { TextLine } from "../generators/TextLine";
-import { Catalog } from "../generators/Catalog";
-import { FontHelvetica } from "../generators/FontHelvetica";
-import { Page } from "../generators/Page";
-import { Pages } from "../generators/Pages";
+import { TextLine } from "../generator/pdf/TextLine";
+import { Catalog } from "../generator/pdf/Catalog";
+import { FontHelvetica } from "../generator/pdf/FontHelvetica";
+import { Page } from "../generator/pdf/Page";
+import { Pages } from "../generator/pdf/Pages";
 import { Stream } from "../dataTypes/pdf/stream";
 import { PdfReference } from "../dataTypes/pdf/reference/";
 

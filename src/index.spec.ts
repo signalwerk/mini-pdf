@@ -1,8 +1,8 @@
-import { Catalog } from "./generators/Catalog";
-import { FontHelvetica } from "./generators/FontHelvetica";
-import { Page } from "./generators/Page";
-import { Pages } from "./generators/Pages";
-import { PlainContent } from "./generators/PlainContent";
+import { Catalog } from "./generator/pdf/Catalog";
+import { FontHelvetica } from "./generator/pdf/FontHelvetica";
+import { Page } from "./generator/pdf/Page";
+import { Pages } from "./generator/pdf/Pages";
+import { PlainContent } from "./generator/pdf/PlainContent";
 
 import { PdfTypeWriter } from "./writer/TypeWriter";
 

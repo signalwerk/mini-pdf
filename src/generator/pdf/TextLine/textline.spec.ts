@@ -1,6 +1,6 @@
 import { TextLine } from "../TextLine";
-import { pdfOperator, PdfOperatorValues } from "../../dataTypes/pdf/operator";
-import { pdfName } from "../../dataTypes/pdf/name";
+import { pdfOperator, PdfOperatorValues } from "../../../dataTypes/pdf/operator";
+import { pdfName } from "../../../dataTypes/pdf/name";
 
 test("Generator for TextLine", () => {
   const textLine = TextLine({

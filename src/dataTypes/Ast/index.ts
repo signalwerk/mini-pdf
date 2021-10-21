@@ -2,6 +2,7 @@ import { Text } from "./Text";
 import { Document } from "./Document";
 import { Viewport } from "./Viewport";
 import { Image } from "./Image";
+import { Line } from "./Line";
 
 export enum AstTypesEnum {
   DOCUMENT = "DOCUMENT",
@@ -14,4 +15,4 @@ export enum AstTypesEnum {
   STYLE = "STYLE",
 }
 
-export type AstTypes = Document | Viewport | Text | Image;
+export type AstTypes = Document | Viewport | Text | Image | Line;

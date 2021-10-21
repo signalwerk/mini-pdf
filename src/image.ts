@@ -7,7 +7,7 @@ import { Viewport } from "./dataTypes/Ast/Viewport";
 import { ColorSpace } from "./dataTypes/Ast/ColorSpace";
 import { Image } from "./dataTypes/Ast/Image";
 
-import { PlainContent } from "./generators/PlainContent";
+import { PlainContent } from "./generator/pdf/PlainContent";
 import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/pdf/dictonary";
 import { pdfOperator, PdfOperatorValues } from "./dataTypes/pdf/operator";
 import { pdfName } from "./dataTypes/pdf/name";
