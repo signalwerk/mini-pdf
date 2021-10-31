@@ -4,7 +4,7 @@ import { Page } from "./generator/pdf/Page";
 import { Pages } from "./generator/pdf/Pages";
 import { PlainContent } from "./generator/pdf/PlainContent";
 
-import { PdfTypeWriter } from "./writer/TypeWriter";
+import { PdfTypeWriter } from "./writer/pdf/TypeWriter";
 
 import { Stream } from "./dataTypes/pdf/stream";
 import { Ref } from "./dataTypes/pdf/reference";

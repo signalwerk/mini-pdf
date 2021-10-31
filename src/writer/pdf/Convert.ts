@@ -1,22 +1,22 @@
-import { convert as convertOfImage } from "../image";
-import { Viewport } from "../dataTypes/Ast/Viewport";
-import { AstTypesEnum, AstTypes } from "../dataTypes/Ast/";
-import { pdfArray } from "../dataTypes/pdf/array";
-import { pdfName } from "../dataTypes/pdf/name";
-import { Ref } from "../dataTypes/pdf/reference";
-import { PdfPdf, PdfTypes, PdfType } from "../dataTypes/pdf/";
+import { convert as convertOfImage } from "../../image";
+import { Viewport } from "../../dataTypes/Ast/Viewport";
+import { AstTypesEnum, AstTypes } from "../../dataTypes/Ast";
+import { pdfArray } from "../../dataTypes/pdf/array";
+import { pdfName } from "../../dataTypes/pdf/name";
+import { Ref } from "../../dataTypes/pdf/reference";
+import { PdfPdf, PdfTypes, PdfType } from "../../dataTypes/pdf";
 import {
   PdfDictonary,
   pdfDictionary,
   pdfDictionaryPair,
-} from "../dataTypes/pdf/dictonary";
-import { TextLine } from "../generator/pdf/TextLine";
-import { Catalog } from "../generator/pdf/Catalog";
-import { FontHelvetica } from "../generator/pdf/FontHelvetica";
-import { Page } from "../generator/pdf/Page";
-import { Pages } from "../generator/pdf/Pages";
-import { Stream } from "../dataTypes/pdf/stream";
-import { PdfReference } from "../dataTypes/pdf/reference/";
+} from "../../dataTypes/pdf/dictonary";
+import { TextLine } from "../../generator/pdf/TextLine";
+import { Catalog } from "../../generator/pdf/Catalog";
+import { FontHelvetica } from "../../generator/pdf/FontHelvetica";
+import { Page } from "../../generator/pdf/Page";
+import { Pages } from "../../generator/pdf/Pages";
+import { Stream } from "../../dataTypes/pdf/stream";
+import { PdfReference } from "../../dataTypes/pdf/reference";
 
 const countObj = (pdf: PdfPdf) => {
   return pdf.objects.length;

@@ -1,5 +1,5 @@
 import { PdfTypeEnum } from "../";
-import { PdfTypeWriter } from "../../../writer/TypeWriter";
+import { PdfTypeWriter } from "../../../writer/pdf/TypeWriter";
 
 import { pdfArray, pdfArrayToString } from ".";
 

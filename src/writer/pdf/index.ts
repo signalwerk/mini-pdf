@@ -1,14 +1,14 @@
-import { Document } from "../dataTypes/Ast/Document";
-import { pdfName } from "../dataTypes/pdf/name";
-import { pdfOperator, PdfOperatorValues } from "../dataTypes/pdf/operator";
-import { pdfDictionary, pdfDictionaryPair } from "../dataTypes/pdf/dictonary";
-import { PdfPdf, Pdf } from "../dataTypes/pdf/";
-import { PlainContent } from "../generator/pdf/PlainContent";
-import { Header } from "../generator/pdf/Header";
+import { Document } from "../../dataTypes/Ast/Document";
+import { pdfName } from "../../dataTypes/pdf/name";
+import { pdfOperator, PdfOperatorValues } from "../../dataTypes/pdf/operator";
+import { pdfDictionary, pdfDictionaryPair } from "../../dataTypes/pdf/dictonary";
+import { PdfPdf, Pdf } from "../../dataTypes/pdf";
+import { PlainContent } from "../../generator/pdf/PlainContent";
+import { Header } from "../../generator/pdf/Header";
 import { PdfTypeWriter } from "./TypeWriter";
-import { Ref } from "../dataTypes/pdf/reference";
+import { Ref } from "../../dataTypes/pdf/reference";
 import { Convert } from "./Convert";
-import { pad } from "../util/pad";
+import { pad } from "../../util/pad";
 
 export const xrefWriter = (
   offset: number,

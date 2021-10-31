@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { Writer, printDebug } from "./writer/";
+import { Writer, printDebug } from "./writer/pdf/";
 import { DOC } from "./examples/Ast/PdfDoc";
 
 const Demo = () => {

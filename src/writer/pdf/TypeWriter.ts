@@ -1,18 +1,18 @@
-import { pdfArrayToString } from "../dataTypes/pdf/array";
-import { pdfNameToString, pdfName } from "../dataTypes/pdf/name";
-import { pdfStringToString, pdfString } from "../dataTypes/pdf/string";
+import { pdfArrayToString } from "../../dataTypes/pdf/array";
+import { pdfNameToString, pdfName } from "../../dataTypes/pdf/name";
+import { pdfStringToString, pdfString } from "../../dataTypes/pdf/string";
 import {
   pdfOperatorToString,
   pdfOperator,
   PdfOperatorValues,
-} from "../dataTypes/pdf/operator";
+} from "../../dataTypes/pdf/operator";
 import {
   PdfDictonaryToString,
   pdfDictionary,
   pdfDictionaryPair,
-} from "../dataTypes/pdf/dictonary";
-import { PdfTypes, PdfTypeEnum } from "../dataTypes/pdf";
-import { PlainContent } from "../generator/pdf/PlainContent";
+} from "../../dataTypes/pdf/dictonary";
+import { PdfTypes, PdfTypeEnum } from "../../dataTypes/pdf";
+import { PlainContent } from "../../generator/pdf/PlainContent";
 
 export const PdfTypeWriter = (obj: PdfTypes): string => {
   switch (typeof obj) {
