@@ -1,4 +1,5 @@
 import { Document } from "../../dataTypes/Ast/Document";
+import { TextAlignEnum } from "../../dataTypes/Ast/Text";
 import { AstTypesEnum } from "../../dataTypes/Ast";
 
 export const DOC: Document = {
@@ -19,11 +20,34 @@ export const DOC: Document = {
         {
           type: AstTypesEnum.TEXT,
           attributes: {
-            x: 50,
-            y: 80,
+            position: {
+              type: AstTypesEnum.POINT,
+              attributes: {
+                x: 50,
+                y: 80,
+              },
+            },
+
             size: 18,
             font: "F1",
             content: "hello world",
+            align: TextAlignEnum.START,
+          },
+        },
+        {
+          type: AstTypesEnum.TEXT,
+          attributes: {
+            position: {
+              type: AstTypesEnum.POINT,
+              attributes: {
+                x: 150,
+                y: 80,
+              },
+            },
+            size: 18,
+            font: "F1",
+            content: "end",
+            align: TextAlignEnum.END,
           },
         },
         {
@@ -40,7 +64,7 @@ export const DOC: Document = {
               type: AstTypesEnum.POINT,
               attributes: {
                 x: 50,
-                y: 80,
+                y: 180,
               },
             },
           },

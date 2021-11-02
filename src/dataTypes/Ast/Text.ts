@@ -1,4 +1,5 @@
 import { AstTypesEnum } from ".";
+import { Point } from "./Point";
 
 // export type Line = {
 //   type: AstTypesEnum.LINE;
@@ -10,13 +11,20 @@ import { AstTypesEnum } from ".";
 //   };
 // };
 
+export enum TextAlignEnum {
+  DEFAULT = "start",
+  START = "start",
+  END = "end",
+  MIDDLE = "middle",
+}
+
 export type Text = {
   type: AstTypesEnum.TEXT;
   attributes: {
-    x: number;
-    y: number;
-    size: number;
-    font: string;
+    position: Point;
+    size?: number;
+    font?: string;
     content: string;
+    align?: TextAlignEnum;
   };
 };
