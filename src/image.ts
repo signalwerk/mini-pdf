@@ -3,12 +3,15 @@
 import * as fs from "fs";
 import * as ascii85 from "ascii85";
 
-import { Image, ColorSpace, Viewport } from "../data/structure";
-import { PlainContent } from "./generators/PlainContent";
-import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/dictonary";
-import { pdfOperator, PdfOperatorValues } from "./dataTypes/operator";
-import { pdfName } from "./dataTypes/name";
-import { pdfArray } from "./dataTypes/array";
+import { Viewport } from "./dataTypes/Ast/Viewport";
+import { ColorSpace } from "./dataTypes/Ast/ColorSpace";
+import { Image } from "./dataTypes/Ast/Image";
+
+import { PlainContent } from "./generator/pdf/PlainContent";
+import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/pdf/dictonary";
+import { pdfOperator, PdfOperatorValues } from "./dataTypes/pdf/operator";
+import { pdfName } from "./dataTypes/pdf/name";
+import { pdfArray } from "./dataTypes/pdf/array";
 
 const ColorSpaceToName = (system: ColorSpace) => {
   switch (system) {
@@ -79,8 +82,21 @@ export const convert = (obj: Image, viewport: Viewport) => {
 };
 
 const MARKERS = [
-  0xffc0, 0xffc1, 0xffc2, 0xffc3, 0xffc5, 0xffc6, 0xffc7, 0xffc8, 0xffc9,
-  0xffca, 0xffcb, 0xffcc, 0xffcd, 0xffce, 0xffcf,
+  0xffc0,
+  0xffc1,
+  0xffc2,
+  0xffc3,
+  0xffc5,
+  0xffc6,
+  0xffc7,
+  0xffc8,
+  0xffc9,
+  0xffca,
+  0xffcb,
+  0xffcc,
+  0xffcd,
+  0xffce,
+  0xffcf,
 ];
 
 export function readMeta(buffer) {

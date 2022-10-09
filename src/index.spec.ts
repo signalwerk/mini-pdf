@@ -1,18 +1,18 @@
-import { Catalog } from "./generators/Catalog";
-import { FontHelvetica } from "./generators/FontHelvetica";
-import { Page } from "./generators/Page";
-import { Pages } from "./generators/Pages";
-import { PlainContent } from "./generators/PlainContent";
+import { Catalog } from "./generator/pdf/Catalog";
+import { FontHelvetica } from "./generator/pdf/FontHelvetica";
+import { Page } from "./generator/pdf/Page";
+import { Pages } from "./generator/pdf/Pages";
+import { PlainContent } from "./generator/pdf/PlainContent";
 
-import { PdfTypeWriter } from "./writer/TypeWriter";
+import { PdfTypeWriter } from "./writer/pdf/TypeWriter";
 
-import { Stream } from "./dataTypes/stream";
-import { Ref } from "./dataTypes/reference";
+import { Stream } from "./dataTypes/pdf/stream";
+import { Ref } from "./dataTypes/pdf/reference";
 
-import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/dictonary";
-import { pdfName } from "./dataTypes/name";
-import { pdfArray } from "./dataTypes/array";
-import { Box } from "../data/structure";
+import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/pdf/dictonary";
+import { pdfName } from "./dataTypes/pdf/name";
+import { pdfArray } from "./dataTypes/pdf/array";
+import { Box } from "./dataTypes/Ast/Box";
 
 test("Minimal one test", () => {
   expect(1).toBe(1);
