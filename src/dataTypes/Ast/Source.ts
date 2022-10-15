@@ -1,7 +1,7 @@
-import { ColorSpace } from "./ColorSpace";
+import { AstColorSpace } from "./ColorSpace";
 
-export type Source = {
-  colorSpace: ColorSpace;
+export type AstSource = {
+  colorSpace: AstColorSpace;
   depth: number;
   width: number;
   height: number;

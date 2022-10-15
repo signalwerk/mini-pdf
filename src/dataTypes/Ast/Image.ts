@@ -1,13 +1,13 @@
 import { AstTypesEnum } from ".";
-import { Source } from "./Source";
+import { AstSource } from "./Source";
 
-export type Image = {
+export type AstImage = {
   type: AstTypesEnum.IMAGE;
   attributes: {
     x: number;
     y: number;
     width: number;
     height: number;
-    source: Source;
+    source: AstSource;
   };
 };

@@ -1,8 +1,11 @@
-import { Text } from "./Text";
-import { Document } from "./Document";
-import { Viewport } from "./Viewport";
-import { Image } from "./Image";
-import { Line } from "./Line";
+import { AstText } from "./Text";
+import { AstDocument } from "./Document";
+import { AstViewport } from "./Viewport";
+import { AstImage } from "./Image";
+import { AstLine } from "./Line";
+import { AstRect } from "./Rect";
+import { AstGroup } from "./Group";
+import { AstPolygon } from "./Polygon";
 
 export enum AstTypesEnum {
   DOCUMENT = "DOCUMENT",
@@ -13,6 +16,13 @@ export enum AstTypesEnum {
   LINE = "LINE",
   POINT = "POINT",
   STYLE = "STYLE",
+  BOX = "BOX", // just a holder of x,y,width,height
+  RECT = "RECT",
+  COLOR = "COLOR",
+  GROUP = "GROUP",
+  POLYGON = "POLYGON",
 }
 
-export type AstTypes = Document | Viewport | Text | Image | Line;
+export type AstContent = AstText | AstLine | AstRect | AstGroup | AstPolygon;
+
+export type AstTypes = AstDocument | AstViewport | AstText | AstImage | AstLine;

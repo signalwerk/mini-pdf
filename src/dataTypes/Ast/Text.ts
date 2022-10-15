@@ -1,15 +1,5 @@
 import { AstTypesEnum } from ".";
-import { Point } from "./Point";
-
-// export type Line = {
-//   type: AstTypesEnum.LINE;
-//   attributes: {
-//     x1: number;
-//     y1: number;
-//     x2: number;
-//     y2: number;
-//   };
-// };
+import { AstStyle } from "./Style";
 
 export enum TextAlignEnum {
   DEFAULT = "start",
@@ -18,13 +8,18 @@ export enum TextAlignEnum {
   MIDDLE = "middle",
 }
 
-export type Text = {
+export type AstTextAttributes = {
+  x: number;
+  y: number;
+  // size?: number;
+  // font?: string;
+  text: string;
+  // align?: TextAlignEnum;
+  className?: string;
+  style?: AstStyle;
+};
+
+export type AstText = {
   type: AstTypesEnum.TEXT;
-  attributes: {
-    position: Point;
-    size?: number;
-    font?: string;
-    content: string;
-    align?: TextAlignEnum;
-  };
+  attributes: AstTextAttributes;
 };

@@ -1,19 +1,9 @@
 import { AstTypesEnum } from ".";
 
-export type Point = {
+export type AstPoint = {
   type: AstTypesEnum.POINT;
   attributes: {
     x: number;
     y: number;
   };
 };
-
-export function point(x: number, y: number): Point {
-  return {
-    type: AstTypesEnum.POINT,
-    attributes: {
-      x,
-      y,
-    },
-  };
-}

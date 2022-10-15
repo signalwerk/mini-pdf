@@ -1,6 +1,6 @@
 import { AstTypesEnum } from ".";
 
-export type Font = {
+export type AstFont = {
   type: AstTypesEnum.FONT;
   id: string;
 };

@@ -1,33 +1,16 @@
 import { AstTypesEnum } from ".";
-import { Point } from "./Point";
-import { Color } from "./Color";
+import { AstStyle } from "./Style";
 
-export type Line = {
-  type: AstTypesEnum.LINE;
-  attributes: {
-    start: Point;
-    end: Point;
-    style?: PathStyle;
-  };
+export type AstLineAttributes = {
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+  className?: string;
+  style?: AstStyle;
 };
 
-export enum PathCapEnum {
-  ROUND = "ROUND",
-}
-export enum PathJoinEnum {
-  ROUND = "ROUND",
-}
-
-export type DashArray = Array<number>;
-
-export type PathStyle = {
-  type: AstTypesEnum.STYLE;
-  attributes: {
-    strokeColor: Color;
-    strokeDasharray: DashArray;
-    strokeWidth: number;
-    strokeLinecap: PathCapEnum;
-    strokeLinejoin: PathJoinEnum;
-    fill: Color;
-  };
+export type AstLine = {
+  type: AstTypesEnum.LINE;
+  attributes: AstLineAttributes;
 };
