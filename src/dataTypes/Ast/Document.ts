@@ -1,9 +1,14 @@
 import { AstTypesEnum } from ".";
-import { Font } from "./Font";
-import { Viewport } from "./Viewport";
+import { AstFont } from "./Font";
+import { AstViewport } from "./Viewport";
 
-export type Document = {
+export type AstDocumentAttributes = {
+  className?: string;
+  fonts?: Array<AstFont>;
+};
+
+export type AstDocument = {
   type: AstTypesEnum.DOCUMENT;
-  fonts: Array<Font>;
-  children: Array<Viewport>;
+  attributes: AstDocumentAttributes;
+  children: Array<AstViewport>;
 };

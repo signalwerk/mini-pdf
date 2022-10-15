@@ -1,6 +1,5 @@
 # ⚠️ NOT READY FOR USE
 
-
 https://github.com/riadvice/AlivePDF/blob/master/alivepdf/src/org/alivepdf/pdf/PDF.as
 pdf go processor: https://github.com/pdfcpu/pdfcpu
 
@@ -19,6 +18,7 @@ tiny pdf writer in javascript
 ## ToDo
 
 - [Generate Microbundle for PDF-Generation](https://github.com/developit/microbundle)
+- [Text Layout](https://github.com/bramstein/typeset)
 
 ## PDF in HTML
 
