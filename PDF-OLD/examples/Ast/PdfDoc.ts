@@ -1,6 +1,6 @@
-import { Document } from "../../dataTypes/Ast/Document";
-import { ColorSpace } from "../../dataTypes/Ast/ColorSpace";
-import { AstTypesEnum } from "../../dataTypes/Ast";
+import { Document } from "../../dataTypes/ast/Document";
+import { ColorSpace } from "../../dataTypes/ast/ColorSpace";
+import { AstTypesEnum } from "../../dataTypes/ast";
 
 export const DOC: Document = {
   type: AstTypesEnum.DOCUMENT,

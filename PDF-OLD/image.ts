@@ -3,9 +3,9 @@
 import * as fs from "fs";
 import * as ascii85 from "ascii85";
 
-import { Viewport } from "./dataTypes/Ast/Viewport";
-import { ColorSpace } from "./dataTypes/Ast/ColorSpace";
-import { Image } from "./dataTypes/Ast/Image";
+import { Viewport } from "./dataTypes/ast/Viewport";
+import { ColorSpace } from "./dataTypes/ast/ColorSpace";
+import { Image } from "./dataTypes/ast/Image";
 
 import { PlainContent } from "./generator/pdf/PlainContent";
 import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/pdf/dictonary";

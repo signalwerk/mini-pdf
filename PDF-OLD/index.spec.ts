@@ -12,7 +12,7 @@ import { Ref } from "./dataTypes/pdf/reference";
 import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/pdf/dictonary";
 import { pdfName } from "./dataTypes/pdf/name";
 import { pdfArray } from "./dataTypes/pdf/array";
-import { Box } from "./dataTypes/Ast/Box";
+import { Box } from "./dataTypes/ast/Box";
 
 test("Minimal one test", () => {
   expect(1).toBe(1);

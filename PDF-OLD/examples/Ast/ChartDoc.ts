@@ -1,6 +1,6 @@
-import { Document } from "../../dataTypes/Ast/Document";
-import { TextAlignEnum } from "../../dataTypes/Ast/Text";
-import { AstTypesEnum } from "../../dataTypes/Ast";
+import { Document } from "../../dataTypes/ast/Document";
+import { TextAlignEnum } from "../../dataTypes/ast/Text";
+import { AstTypesEnum } from "../../dataTypes/ast";
 
 export const DOC: Document = {
   type: AstTypesEnum.DOCUMENT,

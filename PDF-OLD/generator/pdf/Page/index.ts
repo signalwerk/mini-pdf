@@ -1,4 +1,4 @@
-import { Box } from "../../../dataTypes/Ast/Box";
+import { Box } from "../../../dataTypes/ast/Box";
 import { pdfArray } from "../../../dataTypes/pdf/array";
 import { pdfName } from "../../../dataTypes/pdf/name";
 import {
