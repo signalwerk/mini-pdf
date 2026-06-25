@@ -1,26 +1,16 @@
-import { Writer } from "./writer/";
+import { Writer, printDebug } from "./writer/";
+import { jpegInfo, jpegSize, jpegColorMode } from "./image";
 
 const MiniPdf = {
   Writer,
+  printDebug,
+  jpegInfo,
+  jpegSize,
+  jpegColorMode,
 };
 
-// export const TEST = async () => {
-//   const { promises: fs } = require("fs");
-
-//   const jpegPath = "./data-in/test.jpg";
-
-//   // const fs = require('fs');
-
-//   // fs.readFile("./data-in/test.jpg", function (err, data) {
-//   //   if (err) throw err;
-//   //   // console.log(data.toString());
-//   //   console.log(data);
-//   // });
-
-//   let buffer = await fs.readFile(jpegPath);
-
-//   return { meta: readMeta(buffer) };
-// };
-
 export default MiniPdf;
-export { Writer };
+export { Writer, printDebug };
+export { jpegInfo, jpegSize, jpegColorMode } from "./image";
+export type { JpegInfo, ColorMode } from "./image";
+export * from "./structure";

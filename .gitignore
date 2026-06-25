@@ -1,15 +1,8 @@
 /node_modules/
-/build/
-/lib/
 /dist/
-/docs/
-.idea/*
 
-.DS_Store
-coverage
-*.log
-/file.pdf
-/file_test.txt
-/file.txt
-/PDFReference.pdf
-/data-in/test.jpg
+# generated example output
+/examples/output/
+
+# large local-only assets (kept out of git)
+/docs/PDFReference.pdf

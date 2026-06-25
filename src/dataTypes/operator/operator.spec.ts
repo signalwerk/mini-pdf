@@ -16,12 +16,12 @@ test("Generator for pdfOperator", () => {
 
 test("toString for pdfOperator", () => {
   expect(
-    `${pdfOperatorToString(pdfOperator(value.operator, value.stack))}`
+    `${pdfOperatorToString(pdfOperator(value.operator, value.stack))}`,
   ).toMatch(str);
 });
 
 test("PdfTypeWriter for pdfOperator", () => {
   expect(`${PdfTypeWriter(pdfOperator(value.operator, value.stack))}`).toMatch(
-    str
+    str,
   );
 });

@@ -1,4 +1,4 @@
-import { Document } from "../../data/structure";
+import { Document } from "../structure";
 import { pdfName } from "../dataTypes/name";
 import { pdfOperator, PdfOperatorValues } from "../dataTypes/operator";
 import { pdfDictionary, pdfDictionaryPair } from "../dataTypes/dictonary";
@@ -13,7 +13,7 @@ import { pad } from "../util/pad";
 export const xrefWriter = (
   offset: number,
   generation = 0,
-  used = true
+  used = true,
 ): string => {
   return `${pad(offset, 10)} ${pad(generation, 10)} ${used ? "n" : "f"}`;
 };
@@ -47,15 +47,16 @@ export const Writer = (doc: Document): string => {
   output.push(PdfTypeWriter(PlainContent(`0 ${size}`)));
   output.push(xref.join("\n"));
 
+  const trailer = [
+    pdfDictionaryPair(pdfName("Size"), size),
+    pdfDictionaryPair(pdfName("Root"), Ref(1)),
+  ];
+  if (PDF.info) {
+    trailer.push(pdfDictionaryPair(pdfName("Info"), PDF.info));
+  }
+
   output.push(PdfTypeWriter(pdfOperator(PdfOperatorValues.TRAILER_TRAILER)));
-  output.push(
-    PdfTypeWriter(
-      pdfDictionary([
-        pdfDictionaryPair(pdfName("Size"), size),
-        pdfDictionaryPair(pdfName("Root"), Ref(1)),
-      ])
-    )
-  );
+  output.push(PdfTypeWriter(pdfDictionary(trailer)));
 
   output.push(PdfTypeWriter(pdfOperator(PdfOperatorValues.TRAILER_START_XREF)));
   output.push(PdfTypeWriter(PlainContent(`${offset + 1}`)));

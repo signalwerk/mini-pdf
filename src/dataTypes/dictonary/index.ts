@@ -10,7 +10,7 @@ export type PdfDictionaryPair = {
 
 export const pdfDictionaryPair = (
   key: PdfName,
-  value: PdfTypes
+  value: PdfTypes,
 ): PdfDictionaryPair => ({
   key,
   value,
@@ -26,7 +26,7 @@ export type PdfDictonary = {
 };
 
 export const pdfDictionary = (
-  pairs: Array<PdfDictionaryPair>
+  pairs: Array<PdfDictionaryPair>,
 ): PdfDictonary => ({
   type: PdfTypeEnum.DICTIONARY,
   pairs,

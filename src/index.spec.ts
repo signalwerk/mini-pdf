@@ -12,7 +12,7 @@ import { Ref } from "./dataTypes/reference";
 import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/dictonary";
 import { pdfName } from "./dataTypes/name";
 import { pdfArray } from "./dataTypes/array";
-import { Box } from "../data/structure";
+import { Box } from "./structure";
 
 test("Minimal one test", () => {
   expect(1).toBe(1);
@@ -44,7 +44,7 @@ test("PdfTypeWriter for stream", () => {
   const stream = Stream([10]);
 
   expect(`${PdfTypeWriter(stream)}`).toMatch(
-    ["<< /Length 2 >>", "stream", "10", "endstream"].join("\n")
+    ["<< /Length 2 >>", "stream", "10", "endstream"].join("\n"),
   );
 });
 
@@ -57,7 +57,7 @@ test("Generator for Catalog", () => {
     pdfDictionary([
       pdfDictionaryPair(pdfName("Type"), pdfName("Catalog")),
       pdfDictionaryPair(pdfName("Pages"), pagesRef),
-    ])
+    ]),
   );
 });
 
@@ -71,7 +71,7 @@ test("Generator for Pages", () => {
       pdfDictionaryPair(pdfName("Type"), pdfName("Pages")),
       pdfDictionaryPair(pdfName("Count"), 2),
       pdfDictionaryPair(pdfName("Kids"), pdfArray(pagesRef)),
-    ])
+    ]),
   );
 });
 
@@ -90,10 +90,10 @@ test("Generator for Page", () => {
       pdfDictionaryPair(pdfName("Resources"), resources),
       pdfDictionaryPair(
         pdfName("MediaBox"),
-        pdfArray([...mediaBox] as Array<number>)
+        pdfArray([...mediaBox] as Array<number>),
       ),
       pdfDictionaryPair(pdfName("Contents"), pdfArray(contents)),
-    ])
+    ]),
   );
 });
 
@@ -106,6 +106,6 @@ test("Generator for FontHelvetica", () => {
       pdfDictionaryPair(pdfName("Subtype"), pdfName("Type1")),
       pdfDictionaryPair(pdfName("Name"), pdfName("F1")),
       pdfDictionaryPair(pdfName("BaseFont"), pdfName("Helvetica")),
-    ])
+    ]),
   );
 });

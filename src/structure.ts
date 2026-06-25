@@ -13,24 +13,32 @@ export type AstTypes = Document | Viewport | Text | Image;
 
 export type Document = {
   type: AstTypesEnum.DOCUMENT;
+  /** Optional document metadata, written to the PDF `/Info` dictionary. */
+  info?: Info;
   fonts: Array<Font>;
   children: Array<Viewport>;
+};
+
+/**
+ * Document information dictionary (PDF 1.7 §14.3.3 / PDF Reference §9.2.1).
+ * Every field is optional; only the ones you set are written. Date fields take
+ * a `Date` (formatted to a PDF date string) or a ready-made string such as
+ * `"D:19970915110347-08'00'"`.
+ */
+export type Info = {
+  title?: string;
+  author?: string;
+  subject?: string;
+  keywords?: string;
+  creator?: string;
+  producer?: string;
+  creationDate?: Date | string;
+  modDate?: Date | string;
 };
 
 export type Font = {
   type: AstTypesEnum.FONT;
   id: string;
-};
-
-export enum ColorSpace {
-  RGB = "RGB",
-}
-
-export type Source = {
-  colorSpace: ColorSpace;
-  depth: number;
-  width: number;
-  height: number;
 };
 
 export type Image = {
@@ -40,7 +48,12 @@ export type Image = {
     y: number;
     width: number;
     height: number;
-    source: Source;
+    /**
+     * Raw JPEG bytes to embed. The image metadata (color space, bit depth and
+     * intrinsic pixel size) is read directly from these bytes, so you only need
+     * to provide the placement (`x`, `y`, `width`, `height`) on the page.
+     */
+    data: Uint8Array;
   };
 };
 

@@ -2,9 +2,8 @@ import { PdfName, pdfName } from "../../dataTypes/name";
 import {
   PdfDictonary,
   pdfDictionary,
-  pdfDictionaryPair
+  pdfDictionaryPair,
 } from "../../dataTypes/dictonary";
-
 
 export const FontHelvetica = (name: PdfName): PdfDictonary => {
   return pdfDictionary([

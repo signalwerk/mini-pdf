@@ -14,6 +14,6 @@ test("Generator for pdfDictionaryPair", () => {
 
 test("toString for pdfDictionaryPair", () => {
   expect(
-    `${pdfDictionaryPairToString(pdfDictionaryPair(value.key, value.value))}`
+    `${pdfDictionaryPairToString(pdfDictionaryPair(value.key, value.value))}`,
   ).toMatch(str);
 });

@@ -1,32 +1,44 @@
 {
   "name": "mini-pdf",
   "version": "0.0.2",
-  "description": "mini-pdf tiny pdf writer in javascript",
+  "description": "mini-pdf — a tiny PDF writer in TypeScript",
   "author": "Stefan Huber <sh@signalwerk.ch>",
   "repository": "https://github.com/signalwerk/mini-pdf",
   "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "build": "tsc -p tsconfig.json",
-    "publish": "npm run build && npm publish",
-    "clean": "rm -rf dist build",
-    "ts-node": "ts-node"
+    "build": "vite build && npm run build:types",
+    "build:types": "tsc -p tsconfig.json --emitDeclarationOnly",
+    "demo": "vite-node examples/demo.ts",
+    "demo:watch": "vite-node --watch examples/demo.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint . --ext .ts",
+    "clean": "rm -rf dist examples/output"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.21",
-    "@types/node": "^14.14.35",
-    "@typescript-eslint/eslint-plugin": "^4.19.0",
-    "@typescript-eslint/parser": "^4.19.0",
-    "eslint": "^7.22.0",
-    "jest": "^26.6.3",
-    "ts-jest": "^26.5.4",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.2.3"
+    "@types/node": "^20.12.7",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
+    "vite-node": "^1.5.0",
+    "vitest": "^1.5.0"
   },
   "dependencies": {
     "ascii85": "^1.0.2",

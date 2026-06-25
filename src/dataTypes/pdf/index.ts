@@ -2,6 +2,7 @@ import { PdfReference } from "../reference";
 import { PdfArray } from "../array";
 import { PdfName } from "../name";
 import { PdfString } from "../string";
+import { PdfDate } from "../date";
 import { PdfOperator } from "../operator";
 import { PdfDictonary } from "../dictonary";
 import { PdfStream } from "../stream";
@@ -10,6 +11,7 @@ import { PdfPlainContent } from "../plainContent";
 export type PdfPdf = {
   fonts: { [key: string]: PdfReference };
   objects: Array<PdfTypes | null>;
+  info?: PdfReference;
 };
 
 export enum PdfTypeEnum {
@@ -21,6 +23,7 @@ export enum PdfTypeEnum {
   PLAIN_CONTENT = "PLAIN_CONTENT",
   OPERATOR = "OPERATOR",
   STRING = "STRING",
+  DATE = "DATE",
 }
 
 export type PdfType =
@@ -31,6 +34,7 @@ export type PdfType =
   | PdfOperator
   | PdfStream
   | PdfString
+  | PdfDate
   | PdfPlainContent
   | string
   | number;

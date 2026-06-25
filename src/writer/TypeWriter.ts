@@ -1,6 +1,7 @@
 import { pdfArrayToString } from "../dataTypes/array";
 import { pdfNameToString, pdfName } from "../dataTypes/name";
 import { pdfStringToString, pdfString } from "../dataTypes/string";
+import { pdfDateToString } from "../dataTypes/date";
 import {
   pdfOperatorToString,
   pdfOperator,
@@ -36,6 +37,8 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
       return pdfNameToString(obj);
     case PdfTypeEnum.STRING:
       return pdfStringToString(obj);
+    case PdfTypeEnum.DATE:
+      return pdfDateToString(obj);
     case PdfTypeEnum.ARRAY:
       return pdfArrayToString(obj);
     case PdfTypeEnum.PLAIN_CONTENT:
@@ -45,7 +48,7 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
         pdfOperator(PdfOperatorValues.OBJECT_REFERENCE, [
           obj.id,
           obj.generation,
-        ])
+        ]),
       );
     case PdfTypeEnum.STREAM: {
       const content = obj.value.map((item) => PdfTypeWriter(item)).join("\n");

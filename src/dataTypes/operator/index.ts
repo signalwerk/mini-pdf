@@ -28,7 +28,7 @@ export type PdfOperator = {
 
 export function pdfOperator(
   operator: PdfOperatorValues,
-  stack?: Array<PdfTypes>
+  stack?: Array<PdfTypes>,
 ): PdfOperator {
   return {
     type: PdfTypeEnum.OPERATOR,
