@@ -3,8 +3,8 @@
 1. **Embedded-font scope is deliberately narrow.** The subset writer supports a
    single font face with TrueType or CFF1 outlines. CFF2 outlines and font
    collections (`.ttc`/`.otc`) are rejected. Each `TEXT` node is shaped as one
-   run; mixed-direction bidi/script itemization, fallback, and line layout are
-   not implemented.
+   run; mixed-direction bidi/script itemization, fallback, line breaking, and
+   line layout are not implemented.
 2. **Font licenses remain the caller's responsibility.** The writer rejects
    OS/2 flags that explicitly forbid outline embedding or subsetting, but this
    does not establish that a font's license permits distribution in a PDF.
@@ -25,3 +25,7 @@
   `~>` marker, and their declared stream lengths include it.
 - Stream lengths, xref entries, `startxref`, and `printDebug` annotations now
   use UTF-8 byte counts rather than JavaScript character counts.
+- Embedded fonts now support Unicode Type0/CIDFont output, kerning, ligatures,
+  and the default `kern`, `rlig`, `liga`, `clig`, `calt`, `locl`, `ccmp`,
+  `mark`, and `mkmk` feature set. Feature objects override individual defaults;
+  arrays add tags without disabling defaults.

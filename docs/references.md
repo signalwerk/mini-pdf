@@ -28,5 +28,7 @@ and `__notes.md`).
 
 ## Specification
 
+- [OpenType feature registry](https://learn.microsoft.com/en-us/typography/opentype/spec/featurelist)
 - [OpenType glyph positioning (GPOS)](https://learn.microsoft.com/en-us/typography/opentype/spec/gpos)
+- [OpenType CFF1 table](https://learn.microsoft.com/en-us/typography/opentype/spec/cff)
 - The Adobe PDF reference is kept locally at `docs/PDFReference.pdf`.

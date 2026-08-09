@@ -93,13 +93,17 @@ Type0 font (Identity-H)
 └── ToUnicode CMap
 ```
 
-`kern` and `liga` are enabled explicitly by default. A text node can pass an
-OpenType feature object to enable or disable tags, or an array to add tags while
-keeping those defaults. Glyphs are painted at positions derived from fontkit's
-x/y advances and offsets, which preserves kerning, ligatures, and positioning
-returned by the shaper. `/ToUnicode` maps subset CIDs back to UTF-16BE text,
-including supplementary-plane characters supported by the font and
-multi-code-point ligature mappings.
+The explicitly enabled default feature set is `kern`, `rlig`, `liga`, `clig`,
+`calt`, `locl`, `ccmp`, `mark`, and `mkmk`. A feature object is merged after
+those defaults, so its booleans win tag by tag and it can add other tags. A
+feature array is additive: its tags are deduplicated with all defaults and
+cannot disable them. Neither normalization path mutates the AST input.
+
+Glyphs are painted at positions derived from fontkit's x/y advances and
+offsets, which preserves kerning, substitutions such as ligatures, and mark
+positioning returned by the shaper. `/ToUnicode` maps subset CIDs back to
+UTF-16BE text, including supplementary-plane characters supported by the font
+and multi-code-point ligature mappings.
 
 The subset path supports TrueType outlines (`CIDFontType2` / `FontFile2`) and
 CFF1 outlines (`CIDFontType0` / `FontFile3`). It rejects CFF2, font collections,
@@ -119,6 +123,7 @@ for inspecting the generated file — the demo writes this to `output/demo.txt`.
 ## Trying it
 
 `npm run demo` builds the document in
-[`examples/demo.ts`](../examples/demo.ts) — which uses every node type — and
-writes `examples/output/demo.pdf` plus the byte-offset debug dump
-`examples/output/demo.debug.txt`.
+[`examples/demo.ts`](../examples/demo.ts). It keeps every node type on the JPEG
+page, then uses embedded Work Sans Medium and ExtraBold for Unicode, ligature
+on/off, and kerning on/off examples. It writes `examples/output/demo.pdf` plus
+the byte-offset debug dump `examples/output/demo.debug.txt`.

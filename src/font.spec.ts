@@ -2,7 +2,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { unicodeCodePointsToUtf16Hex } from "./font";
+import { EmbeddedFont, unicodeCodePointsToUtf16Hex } from "./font";
 import { AstTypesEnum, Document, OpenTypeFeatures } from "./structure";
 import { Writer } from "./writer/index";
 
@@ -14,6 +14,30 @@ const fontBase64 = fs
   )
   .replace(/\s+/g, "");
 const fontData = Buffer.from(fontBase64, "base64");
+
+const defaultOpenTypeFeatures = [
+  "kern",
+  "rlig",
+  "liga",
+  "clig",
+  "calt",
+  "locl",
+  "ccmp",
+  "mark",
+  "mkmk",
+];
+
+const featureSettingsPassedToLayout = (features?: OpenTypeFeatures) => {
+  const embeddedFont = new EmbeddedFont(fontData, "FTest", 0);
+  const layout = vi
+    .spyOn(embeddedFont.font, "layout")
+    .mockReturnValue({ glyphs: [], positions: [] });
+
+  embeddedFont.shape("test", features);
+
+  expect(layout).toHaveBeenCalledOnce();
+  return layout.mock.calls[0][1];
+};
 
 const documentWithText = (
   content: string,
@@ -101,6 +125,46 @@ test("kerning changes the second glyph's text matrix position", () => {
   expect(kerned[0]).toBe(unkerned[0]);
   expect(kerned[1]).toBeLessThan(unkerned[1]);
   expect(defaultPositions).toEqual(kerned);
+});
+
+test("shaping explicitly enables the browser-like default feature set", () => {
+  expect(featureSettingsPassedToLayout()).toEqual(
+    Object.fromEntries(defaultOpenTypeFeatures.map((tag) => [tag, true])),
+  );
+});
+
+test("feature object overrides win without disabling other defaults", () => {
+  expect(
+    featureSettingsPassedToLayout({ kern: false, liga: false, dlig: true }),
+  ).toEqual({
+    ...Object.fromEntries(defaultOpenTypeFeatures.map((tag) => [tag, true])),
+    kern: false,
+    liga: false,
+    dlig: true,
+  });
+});
+
+test("array features preserve every default and add requested tags", () => {
+  const features = ["dlig", "ss01", "kern"];
+  const settings = featureSettingsPassedToLayout(features);
+
+  expect(Array.isArray(settings)).toBe(true);
+  expect(new Set(settings as Array<string>)).toEqual(
+    new Set([...defaultOpenTypeFeatures, "dlig", "ss01"]),
+  );
+  expect((settings as Array<string>).length).toBe(
+    new Set([...defaultOpenTypeFeatures, "dlig", "ss01"]).size,
+  );
+  expect(features).toEqual(["dlig", "ss01", "kern"]);
+  expect(settings).not.toBe(features);
+});
+
+test("feature normalization does not mutate the caller's object", () => {
+  const features = { kern: false, dlig: true };
+
+  featureSettingsPassedToLayout(features);
+
+  expect(features).toEqual({ kern: false, dlig: true });
 });
 
 test("standard ligatures emit fewer glyphs and preserve their Unicode text", () => {

@@ -70,6 +70,18 @@ const ascii85WithEod = (data: Uint8Array): string =>
 const safePdfName = (value: string): string =>
   value.replace(/[^A-Za-z0-9_.-]/g, "_");
 
+const defaultOpenTypeFeatures = [
+  "kern",
+  "rlig",
+  "liga",
+  "clig",
+  "calt",
+  "locl",
+  "ccmp",
+  "mark",
+  "mkmk",
+];
+
 const subsetTag = (index: number): string => {
   let value = Math.max(0, index);
   let suffix = "";
@@ -141,8 +153,13 @@ export class EmbeddedFont {
     }
 
     const featureSettings = Array.isArray(features)
-      ? Array.from(new Set(["kern", "liga", ...features]))
-      : { kern: true, liga: true, ...(features || {}) };
+      ? Array.from(new Set([...defaultOpenTypeFeatures, ...features]))
+      : {
+          ...Object.fromEntries(
+            defaultOpenTypeFeatures.map((feature) => [feature, true]),
+          ),
+          ...(features || {}),
+        };
     const run = this.font.layout(text, featureSettings);
 
     return run.glyphs.map((glyph, index) => {

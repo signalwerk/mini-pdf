@@ -95,8 +95,9 @@ export type Text = {
     font: string;
     content: string;
     /**
-     * Optional OpenType feature overrides. Kerning (`kern`) and standard
-     * ligatures (`liga`) are enabled by default for embedded fonts.
+     * Optional OpenType feature overrides. Browser-style required/common
+     * shaping features (`kern`, `rlig`, `liga`, `clig`, `calt`, `locl`,
+     * `ccmp`, `mark`, and `mkmk`) are enabled by default for embedded fonts.
      */
     features?: OpenTypeFeatures;
   };

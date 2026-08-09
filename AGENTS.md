@@ -40,7 +40,7 @@ Public entry is `src/index.ts`: `Writer`, `printDebug`, the JPEG helpers
 
 | Command              | What it does                                                       |
 | -------------------- | ------------------------------------------------------------------ |
-| `npm run demo`       | Render `examples/demo.ts` → `examples/output/` (PDF + debug dump). |
+| `npm run demo`       | Render the JPEG + Work Sans shaping demo → `examples/output/`.     |
 | `npm run demo:watch` | Same, re-running on change.                                        |
 | `npm test`           | Vitest, run once. `test:watch` / `test:coverage` exist.            |
 | `npm run build`      | Vite library build (ESM + CJS) + `tsc` `.d.ts` into `dist/`.       |
@@ -64,10 +64,13 @@ files use `test`/`expect` without imports). Tests live next to source as
   `src/image.ts` reads metadata from the header (no filesystem access) and embeds
   an ASCII85 + DCTDecode XObject. Each image gets a unique `Im<n>` resource name.
 - **Embedded fonts:** `FONT.data` is a `Uint8Array`. `fontkit` shapes each
-  `TEXT` node as one run and subsets used glyphs. `kern` and `liga` default to
-  on; `TEXT.attributes.features` overrides or extends OpenType tags. TrueType
-  and CFF1 outlines are supported; CFF2 and font collections are rejected.
-  The PDF uses Identity-H CIDs and `/ToUnicode` for Unicode extraction.
+  `TEXT` node as one run and subsets used glyphs. `kern`, `rlig`, `liga`,
+  `clig`, `calt`, `locl`, `ccmp`, `mark`, and `mkmk` default to on. A
+  `TEXT.attributes.features` object overrides individual defaults and may add
+  tags; an array only adds deduplicated tags while preserving every default.
+  TrueType and CFF1 outlines are supported; CFF2 and font collections are
+  rejected. The PDF uses Identity-H CIDs and `/ToUnicode` for Unicode
+  extraction.
 - **Text-layout boundary:** there is no mixed-direction bidi/script itemization,
   font fallback, or line layout. Font licensing remains the caller's
   responsibility; OS/2 no-embedding/no-subsetting flags are enforced.

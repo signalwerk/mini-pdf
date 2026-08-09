@@ -60,7 +60,9 @@ fs.writeFileSync("hello.debug.txt", printDebug(pdf));
 ```
 
 A runnable version lives in [examples/demo.ts](examples/demo.ts) — run it with
-`npm run demo`.
+`npm run demo`. It keeps the JPEG example and embeds Work Sans Medium and
+ExtraBold on a second page with Unicode, ligature on/off, and kerning on/off
+examples.
 
 ### Embedded OpenType fonts and Unicode
 
@@ -88,7 +90,7 @@ const doc = {
             size: 24,
             font: "NotoSans",
             content: "AV fi café Ω Ж",
-            features: { kern: true, liga: true, calt: true },
+            features: { kern: false, dlig: true },
           },
         },
       ],
@@ -97,18 +99,22 @@ const doc = {
 };
 ```
 
-Embedded text is shaped with `fontkit`; `kern` (kerning) and `liga` (standard
-ligatures) are enabled by default. `features` may be an object of OpenType tags
-to enable or disable (`{ kern: false, liga: false }`), or an array of additional
-tags (`["calt"]`) that keeps both defaults enabled. Features only affect fonts
-with `data`; omitting `data` preserves the built-in Helvetica behavior.
+Embedded text is shaped with `fontkit`. The browser-like default feature set is
+`kern`, `rlig`, `liga`, `clig`, `calt`, `locl`, `ccmp`, `mark`, and `mkmk`, all
+enabled. `features` may be an object: its values override those defaults and can
+also enable extra tags, so `{ kern: false, dlig: true }` disables only kerning,
+enables discretionary ligatures, and leaves the other defaults on. An array is
+additive only: `["dlig", "ss01"]` is deduplicated and appended to every
+default. Features only affect fonts with `data`; omitting `data` preserves the
+built-in Helvetica behavior.
 
 Only used glyphs are embedded. TrueType outlines and OpenType fonts with CFF1
 outlines are supported. A `/ToUnicode` map preserves Unicode text extraction,
-including supported supplementary characters and multi-character ligatures. CFF2
-outlines and font collections (`.ttc`/`.otc`) are not supported. Each `TEXT`
-node is shaped as one run; mini-pdf does not yet perform mixed-direction bidi
-itemization, font fallback, or line layout.
+including supported supplementary characters and multi-character ligatures.
+CFF2 outlines and font collections (`.ttc`/`.otc`) are rejected.
+
+Each `TEXT` node is shaped as one run; mini-pdf does not yet perform
+mixed-direction bidi/script itemization, font fallback, or line layout.
 
 Fonts whose OS/2 embedding flags forbid outline embedding or subsetting are
 rejected. Fonts marked for Preview & Print embedding are accepted, but that
@@ -183,7 +189,7 @@ src/
   util/             Small helpers
 examples/
   demo.ts           One runnable example using every node type (npm run demo)
-  assets/           Sample JPEG used by the demo
+  assets/           Sample JPEG and Work Sans fonts used by the demo
 docs/               Architecture notes, findings and references
 attic/              Old fragments kept for reference (not part of the build)
 ```
