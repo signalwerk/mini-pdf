@@ -14,6 +14,7 @@ import {
 } from "../dataTypes/dictonary";
 import { PdfTypes, PdfTypeEnum } from "../dataTypes/pdf";
 import { PlainContent } from "../generators/PlainContent";
+import { byteLength } from "../util/byteLength";
 
 export const PdfTypeWriter = (obj: PdfTypes): string => {
   switch (typeof obj) {
@@ -53,7 +54,9 @@ export const PdfTypeWriter = (obj: PdfTypes): string => {
     case PdfTypeEnum.STREAM: {
       const content = obj.value.map((item) => PdfTypeWriter(item)).join("\n");
       return PdfTypeWriter([
-        pdfDictionary([pdfDictionaryPair(pdfName("Length"), content.length)]),
+        pdfDictionary([
+          pdfDictionaryPair(pdfName("Length"), byteLength(content)),
+        ]),
         pdfOperator(PdfOperatorValues.STREAM_START),
         PlainContent(content),
         pdfOperator(PdfOperatorValues.STREAM_END),

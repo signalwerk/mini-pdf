@@ -6,6 +6,8 @@ and `__notes.md`).
 ## PDF generation libraries (prior art)
 
 - [PDFKit](https://github.com/foliojs/pdfkit/)
+- [fontkit](https://github.com/foliojs/fontkit/) — OpenType parsing, shaping,
+  and subsetting used by mini-pdf
 - [internet_archive_downloader — pdf/document.js](https://github.com/elementdavv/internet_archive_downloader/blob/master/src/js/pdf/document.js)
 - [AlivePDF — PDF.as](https://github.com/riadvice/AlivePDF/blob/master/alivepdf/src/org/alivepdf/pdf/PDF.as)
 - [AlivePDF — JPEGImage.as](https://github.com/riadvice/AlivePDF/blob/master/alivepdf/src/org/alivepdf/images/JPEGImage.as)
@@ -26,5 +28,5 @@ and `__notes.md`).
 
 ## Specification
 
-The full Adobe PDF reference is kept locally at `attic/PDFReference.pdf`
-(not committed — it is large).
+- [OpenType glyph positioning (GPOS)](https://learn.microsoft.com/en-us/typography/opentype/spec/gpos)
+- The Adobe PDF reference is kept locally at `docs/PDFReference.pdf`.

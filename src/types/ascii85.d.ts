@@ -1,5 +1,10 @@
 // Minimal ambient types for the `ascii85` package (it ships no declarations).
 declare module "ascii85" {
-  export function encode(data: Buffer | Uint8Array | string): Buffer;
-  export function decode(data: Buffer | string): Buffer;
+  type Ascii85 = {
+    encode(data: Buffer | Uint8Array | string): Buffer;
+    decode(data: Buffer | string): Buffer;
+  };
+
+  const ascii85: Ascii85;
+  export default ascii85;
 }

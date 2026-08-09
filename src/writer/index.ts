@@ -9,13 +9,14 @@ import { PdfTypeWriter } from "./TypeWriter";
 import { Ref } from "../dataTypes/reference";
 import { Convert } from "./Convert";
 import { pad } from "../util/pad";
+import { byteLength } from "../util/byteLength";
 
 export const xrefWriter = (
   offset: number,
   generation = 0,
   used = true,
 ): string => {
-  return `${pad(offset, 10)} ${pad(generation, 10)} ${used ? "n" : "f"}`;
+  return `${pad(offset, 10)} ${pad(generation, 5)} ${used ? "n" : "f"}`;
 };
 
 export const Writer = (doc: Document): string => {
@@ -28,7 +29,7 @@ export const Writer = (doc: Document): string => {
 
   const header = Header();
   output.push(header);
-  offset = offset + header.length;
+  offset = offset + byteLength(header);
 
   const xref = [];
   xref.push(xrefWriter(0, 65535, false));
@@ -38,7 +39,7 @@ export const Writer = (doc: Document): string => {
 
     output.push(strObj);
     xref.push(xrefWriter(offset + 1));
-    offset = offset + strObj.length + 1;
+    offset = offset + byteLength(strObj) + 1;
   });
 
   const size = PDF.objects.length + 1;
@@ -76,7 +77,7 @@ export const printDebug = (str: string): string => {
 
   lines.forEach((line) => {
     outputLines.push([pad(offset, 10), line].join("   "));
-    offset = offset + line.length + 1;
+    offset = offset + byteLength(line) + 1;
   });
 
   return outputLines.join("\n");

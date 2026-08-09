@@ -6,3 +6,5 @@
 
 # large local-only assets (kept out of git)
 /docs/PDFReference.pdf
+
+**/__*

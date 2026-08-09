@@ -48,6 +48,14 @@ test("PdfTypeWriter for stream", () => {
   );
 });
 
+test("PdfTypeWriter measures stream length in UTF-8 bytes", () => {
+  const stream = Stream([PlainContent("é")]);
+
+  expect(`${PdfTypeWriter(stream)}`).toBe(
+    ["<< /Length 2 >>", "stream", "é", "endstream"].join("\n"),
+  );
+});
+
 test("Generator for Catalog", () => {
   const pagesRef = Ref(1, 2);
 

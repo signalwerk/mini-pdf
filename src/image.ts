@@ -7,7 +7,7 @@
 //
 // https://blog.idrsolutions.com/2010/09/understanding-the-pdf-file-format-images/
 
-import * as ascii85 from "ascii85";
+import ascii85 from "ascii85";
 
 import { Image, Viewport } from "./structure";
 import { PlainContent } from "./generators/PlainContent";
@@ -15,6 +15,7 @@ import { pdfDictionary, pdfDictionaryPair } from "./dataTypes/dictonary";
 import { pdfOperator, PdfOperatorValues } from "./dataTypes/operator";
 import { pdfName } from "./dataTypes/name";
 import { pdfArray } from "./dataTypes/array";
+import { byteLength } from "./util/byteLength";
 
 // --- JPEG inspection (pure, byte-array in → plain data out) -----------------
 
@@ -115,7 +116,11 @@ const DEVICE_COLOR_SPACES: Record<ColorMode, string> = {
 export const convert = (obj: Image, viewport: Viewport, name: string) => {
   const data = obj.attributes.data;
   const info = jpegInfo(data);
-  const content = ascii85.encode(Buffer.from(data)).toString();
+  const encoded = ascii85.encode(Buffer.from(data)).toString();
+  // PDF ASCII85 streams use the `~>` end-of-data marker (without `<~`).
+  // Strip any marker the encoder may already have supplied before appending
+  // one, so the stream remains valid if the dependency's behaviour changes.
+  const content = `${encoded.replace(/(?:~>)+$/, "")}~>`;
 
   const imageObject = [
     pdfDictionary([
@@ -132,7 +137,7 @@ export const convert = (obj: Image, viewport: Viewport, name: string) => {
         pdfName("Filter"),
         pdfArray([pdfName("ASCII85Decode"), pdfName("DCTDecode")]),
       ),
-      pdfDictionaryPair(pdfName("Length"), content.length),
+      pdfDictionaryPair(pdfName("Length"), byteLength(content)),
     ]),
 
     pdfOperator(PdfOperatorValues.STREAM_START),

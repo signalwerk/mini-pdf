@@ -15,7 +15,7 @@ export default defineConfig({
     },
     rollupOptions: {
       // Keep Node built-ins and runtime deps external to the bundle.
-      external: [/^node:/, "fs", "ascii85", "fixed-size-array"],
+      external: [/^node:/, "fs", "ascii85", "fixed-size-array", "fontkit"],
       output: { exports: "named" },
     },
   },

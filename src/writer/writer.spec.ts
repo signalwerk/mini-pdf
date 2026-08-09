@@ -2,7 +2,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { Writer } from "./index";
+import { printDebug, Writer, xrefWriter } from "./index";
 import { AstTypesEnum, Document } from "../structure";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -69,4 +69,44 @@ test("Writer renders an AST containing every element type", () => {
   // document info: an /Info dictionary referenced from the trailer
   expect(pdf).toContain("/Title (mini-pdf)");
   expect(pdf).toMatch(/\/Info \d+ 0 R/);
+});
+
+test("Writer xref and startxref offsets address UTF-8 byte positions", () => {
+  const pdf = Writer(document);
+  const xrefCharacterOffset = pdf.indexOf("xref\n");
+  const xrefByteOffset = Buffer.byteLength(
+    pdf.slice(0, xrefCharacterOffset),
+    "utf8",
+  );
+  const startxref = pdf.match(/startxref\n(\d+)\n%%EOF$/);
+
+  expect(startxref).not.toBeNull();
+  expect(Number(startxref[1])).toBe(xrefByteOffset);
+
+  const xrefLines = pdf.slice(xrefCharacterOffset).split("\n");
+  const objectCount = Number(xrefLines[1].split(" ")[1]) - 1;
+
+  for (let id = 1; id <= objectCount; id += 1) {
+    const marker = `${id} 0 obj\n`;
+    const objectCharacterOffset = pdf.indexOf(marker);
+    const objectByteOffset = Buffer.byteLength(
+      pdf.slice(0, objectCharacterOffset),
+      "utf8",
+    );
+    const declaredOffset = Number(xrefLines[id + 2].slice(0, 10));
+
+    expect(objectCharacterOffset).toBeGreaterThanOrEqual(0);
+    expect(declaredOffset).toBe(objectByteOffset);
+  }
+});
+
+test("xref entries use the fixed-width PDF format", () => {
+  expect(xrefWriter(123, 0, true)).toBe("0000000123 00000 n");
+  expect(xrefWriter(0, 65535, false)).toBe("0000000000 65535 f");
+});
+
+test("printDebug annotates UTF-8 byte offsets", () => {
+  expect(printDebug("A\né\n🙂")).toBe(
+    ["0000000000   A", "0000000002   é", "0000000005   🙂"].join("\n"),
+  );
 });

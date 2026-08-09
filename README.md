@@ -62,6 +62,60 @@ fs.writeFileSync("hello.debug.txt", printDebug(pdf));
 A runnable version lives in [examples/demo.ts](examples/demo.ts) — run it with
 `npm run demo`.
 
+### Embedded OpenType fonts and Unicode
+
+Add the raw bytes of a single font face to a `FONT` node to embed it. A Node.js
+`Buffer` is a `Uint8Array`, so `readFileSync` can be used directly:
+
+```ts
+const fontData = fs.readFileSync("NotoSans-Regular.ttf");
+
+const doc = {
+  type: AstTypesEnum.DOCUMENT,
+  fonts: [
+    { type: AstTypesEnum.FONT, id: "NotoSans", data: fontData },
+  ],
+  children: [
+    {
+      type: AstTypesEnum.VIEWPORT,
+      attributes: { mediaBox: [0, 0, 300, 200] },
+      children: [
+        {
+          type: AstTypesEnum.TEXT,
+          attributes: {
+            x: 20,
+            y: 100,
+            size: 24,
+            font: "NotoSans",
+            content: "AV fi café Ω Ж",
+            features: { kern: true, liga: true, calt: true },
+          },
+        },
+      ],
+    },
+  ],
+};
+```
+
+Embedded text is shaped with `fontkit`; `kern` (kerning) and `liga` (standard
+ligatures) are enabled by default. `features` may be an object of OpenType tags
+to enable or disable (`{ kern: false, liga: false }`), or an array of additional
+tags (`["calt"]`) that keeps both defaults enabled. Features only affect fonts
+with `data`; omitting `data` preserves the built-in Helvetica behavior.
+
+Only used glyphs are embedded. TrueType outlines and OpenType fonts with CFF1
+outlines are supported. A `/ToUnicode` map preserves Unicode text extraction,
+including supported supplementary characters and multi-character ligatures. CFF2
+outlines and font collections (`.ttc`/`.otc`) are not supported. Each `TEXT`
+node is shaped as one run; mini-pdf does not yet perform mixed-direction bidi
+itemization, font fallback, or line layout.
+
+Fonts whose OS/2 embedding flags forbid outline embedding or subsetting are
+rejected. Fonts marked for Preview & Print embedding are accepted, but that
+restriction still applies. OS/2 flags are not a substitute for the font
+license: callers are responsible for having permission to embed and distribute
+the selected font.
+
 ### Inspecting a JPEG
 
 The metadata helpers are exported too, so you can read a JPEG's size and color
@@ -120,6 +174,7 @@ const doc = {
 src/
   index.ts          Public entry point (Writer, printDebug, jpeg* + AST types)
   structure.ts      The document AST (the input you build)
+  font.ts           OpenType shaping, subsetting and PDF font objects (fontkit)
   image.ts          JPEG inspection helpers + embedding
   writer/           AST → PDF object model → serialized bytes + xref/trailer
   generators/       Builders for PDF objects (Catalog, Pages, Page, Font, …)

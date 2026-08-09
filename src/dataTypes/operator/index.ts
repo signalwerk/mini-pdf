@@ -5,6 +5,7 @@ import { PdfTypeWriter } from "../../writer/TypeWriter";
 export enum PdfOperatorValues {
   TEXT_FONT = "Tf",
   TEXT_POSITION = "Td",
+  TEXT_MATRIX = "Tm",
   TEXT_PAINT = "Tj",
   TEXT_BEGIN = "BT",
   TEXT_END = "ET",

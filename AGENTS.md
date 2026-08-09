@@ -19,14 +19,16 @@ Document AST  ──►  Convert  ──►  PDF object model  ──►  Writer
 
 1. `src/structure.ts` — the AST you build. Node types via `AstTypesEnum`:
    `DOCUMENT` → (`info?`, `fonts`, `children`); `VIEWPORT` (a page);
-   `TEXT`; `IMAGE` (carries raw JPEG bytes); `FONT`.
+   `TEXT`; `IMAGE` (carries raw JPEG bytes); `FONT` (optionally carries raw
+   TrueType/OpenType bytes).
 2. `src/dataTypes/*` — PDF primitives (name, string, array, dictionary, stream,
    reference, operator, plainContent) as `factory` + `*ToString` serializer.
 3. `src/generators/*` — assemble primitives into PDF objects (Catalog, Pages,
-   Page, FontHelvetica, TextLine, Header, PlainContent, **Info**).
+   Page, FontHelvetica, TextLine, ShapedTextLine, Header, PlainContent, Info).
 4. `src/writer/Convert.ts` — walks the AST, fills the in-memory PDF container
    (`dataTypes/pdf`) with indirect objects (reserve-then-fill via
-   `addObj`/`replaceObj`).
+   `addObj`/`replaceObj`). `src/font.ts` uses `fontkit` to shape and subset
+   byte-backed fonts, then builds their Type0/CIDFont and `/ToUnicode` objects.
 5. `src/writer/index.ts` — `Writer` serializes objects, builds the xref table by
    tracking byte offsets, then writes the trailer + `startxref`/`%%EOF`.
    `printDebug` re-emits the bytes annotated with each line's byte offset.
@@ -61,12 +63,20 @@ files use `test`/`expect` without imports). Tests live next to source as
 - **Images:** the AST `IMAGE` node carries raw JPEG bytes in `attributes.data`;
   `src/image.ts` reads metadata from the header (no filesystem access) and embeds
   an ASCII85 + DCTDecode XObject. Each image gets a unique `Im<n>` resource name.
-- **Known limitation:** the ASCII85 image stream omits the trailing `~>` EOD
-  marker, so image rendering hasn't been validated in a viewer yet. See
-  `docs/findings.md`.
+- **Embedded fonts:** `FONT.data` is a `Uint8Array`. `fontkit` shapes each
+  `TEXT` node as one run and subsets used glyphs. `kern` and `liga` default to
+  on; `TEXT.attributes.features` overrides or extends OpenType tags. TrueType
+  and CFF1 outlines are supported; CFF2 and font collections are rejected.
+  The PDF uses Identity-H CIDs and `/ToUnicode` for Unicode extraction.
+- **Text-layout boundary:** there is no mixed-direction bidi/script itemization,
+  font fallback, or line layout. Font licensing remains the caller's
+  responsibility; OS/2 no-embedding/no-subsetting flags are enforced.
+- **Byte accounting:** streams, xref, `startxref`, and `printDebug` use UTF-8
+  byte lengths. ASCII85 streams include one trailing `~>` EOD marker.
 - **`attic/`** holds parked fragments and large local-only binaries; it is not
   part of the build. Don't import from it.
-- Untyped dep `ascii85` has an ambient declaration in `src/types/`.
+- Runtime deps `ascii85` and `fontkit` have ambient declarations in
+  `src/types/` and are externalized by the Vite library build.
 
 ## Docs
 

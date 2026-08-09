@@ -16,10 +16,13 @@ discriminated by `AstTypesEnum`:
 
 - `DOCUMENT` — the root; holds `fonts` and `children` (viewports/pages).
 - `VIEWPORT` — one page, with a `mediaBox` and child content.
-- `TEXT` — a line of text at `x/y`, with `size` and `font`.
+- `TEXT` — a line of text at `x/y`, with `size`, `font`, and optional OpenType
+  `features`.
 - `IMAGE` — a JPEG placement; carries the raw bytes (`data`) plus the on-page
   rectangle. Pixel size, bit depth and color space are read from the JPEG.
-- `FONT` — a font declaration referenced by `id`.
+- `FONT` — a font declaration referenced by `id`; optional `data: Uint8Array`
+  contains a single TrueType/OpenType face to embed. Without `data`, the
+  declaration uses built-in Helvetica.
 
 `DOCUMENT` also takes an optional `info` object (title, author, dates, …) that
 becomes the PDF `/Info` document information dictionary.
@@ -53,6 +56,8 @@ Generators assemble the primitives into the well-known PDF structural objects:
 - `Pages` / `Page` — the page tree
 - `FontHelvetica` — a Type1 Helvetica font dictionary
 - `TextLine` — the content-stream operators for one line of text
+- `ShapedTextLine` — positions and paints the glyphs returned by OpenType
+  shaping
 - `Info` — the `/Info` document information dictionary (dates via the `date` primitive)
 - `Header` — the `%PDF-…` header
 - `PlainContent` — raw stream content
@@ -74,10 +79,38 @@ It maps:
   the JPEG bytes) plus the operators that paint it; each image gets a unique
   resource name (`Im<n>`) so multiple images on a page don't collide
 
+### Embedded font path (`src/font.ts`)
+
+`fontkit` is a runtime dependency used for byte-backed `FONT` nodes. `Convert`
+reserves each top-level font object, shapes every referencing `TEXT` node, and
+collects the resulting glyphs. After all pages have been converted, it encodes
+the subset and fills the reserved object plus its supporting PDF objects:
+
+```
+Type0 font (Identity-H)
+├── descendant CIDFont + widths
+├── FontDescriptor → subset FontFile2 or FontFile3 stream
+└── ToUnicode CMap
+```
+
+`kern` and `liga` are enabled explicitly by default. A text node can pass an
+OpenType feature object to enable or disable tags, or an array to add tags while
+keeping those defaults. Glyphs are painted at positions derived from fontkit's
+x/y advances and offsets, which preserves kerning, ligatures, and positioning
+returned by the shaper. `/ToUnicode` maps subset CIDs back to UTF-16BE text,
+including supplementary-plane characters supported by the font and
+multi-code-point ligature mappings.
+
+The subset path supports TrueType outlines (`CIDFontType2` / `FontFile2`) and
+CFF1 outlines (`CIDFontType0` / `FontFile3`). It rejects CFF2, font collections,
+and fonts whose OS/2 flags forbid outline embedding or subsetting. Licensing
+must still be checked by the caller. A `TEXT` node is one shaping run: there is
+no mixed-direction bidi/script itemization, fallback, or line breaking here.
+
 ## 5. Writer (`src/writer/index.ts`)
 
 `Writer` is the public entry. It runs `Convert`, then serializes every object in
-order, tracking byte offsets to build the **xref table**, and finally appends
+order, tracking UTF-8 byte offsets to build the **xref table**, and finally appends
 the **trailer** and `startxref` / `%%EOF`. The result is returned as a string.
 
 `printDebug` produces a side-by-side dump (byte offset + line) which is handy

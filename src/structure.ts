@@ -39,7 +39,17 @@ export type Info = {
 export type Font = {
   type: AstTypesEnum.FONT;
   id: string;
+  /**
+   * Raw bytes of a TrueType/OpenType font to embed. When omitted, the font
+   * keeps the original built-in Helvetica behaviour.
+   */
+  data?: Uint8Array;
 };
+
+/** OpenType feature overrides passed to the text shaper. */
+export type OpenTypeFeatures =
+  | Array<string>
+  | { [feature: string]: boolean };
 
 export type Image = {
   type: AstTypesEnum.IMAGE;
@@ -84,5 +94,10 @@ export type Text = {
     size: number;
     font: string;
     content: string;
+    /**
+     * Optional OpenType feature overrides. Kerning (`kern`) and standard
+     * ligatures (`liga`) are enabled by default for embedded fonts.
+     */
+    features?: OpenTypeFeatures;
   };
 };
