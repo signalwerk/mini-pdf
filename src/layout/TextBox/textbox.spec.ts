@@ -41,7 +41,7 @@ test("wraps Work Sans label copy before it crosses the right edge", () => {
     height: 26,
     lineHeight: 3.12,
     size: 2.6,
-    font: "WorkSansMedium",
+    font: "WorkSansSemiBold",
     content:
       "2001: A Space Odyssey is a 1968 science fiction film produced and directed by Stanley Kubrick.",
   });

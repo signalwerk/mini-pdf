@@ -28,8 +28,8 @@ const image = fs.readFileSync(path.join(here, "assets/sample.jpg"));
 
 // Font nodes take the raw bytes of a TrueType/OpenType font. mini-pdf embeds
 // only the glyphs used below and shapes every text node as one OpenType run.
-const workSansMedium = fs.readFileSync(
-  path.join(here, "assets/fonts/Work Sans/WorkSans-Medium.ttf"),
+const WorkSansSemiBold = fs.readFileSync(
+  path.join(here, "assets/fonts/Work Sans/WorkSans-SemiBold.ttf"),
 );
 const workSansExtraBold = fs.readFileSync(
   path.join(here, "assets/fonts/Work Sans/WorkSans-ExtraBold.ttf"),
@@ -62,8 +62,8 @@ const document: Document = {
   fonts: [
     {
       type: AstTypesEnum.FONT,
-      id: "WorkSansMedium",
-      data: workSansMedium,
+      id: "WorkSansSemiBold",
+      data: WorkSansSemiBold,
     },
     {
       type: AstTypesEnum.FONT,
@@ -102,7 +102,7 @@ const document: Document = {
             x: 20,
             y: 240,
             size: 11,
-            font: "WorkSansMedium",
+            font: "WorkSansSemiBold",
             content: `${info.width}×${info.height} ${info.colorMode}`,
           },
         },
@@ -128,7 +128,7 @@ const document: Document = {
             x: 20,
             y: 484,
             size: 10,
-            font: "WorkSansMedium",
+            font: "WorkSansSemiBold",
             content: "Medium + ExtraBold · Unicode · OpenType shaping",
           },
         },
@@ -148,7 +148,7 @@ const document: Document = {
             x: 20,
             y: 418,
             size: 17,
-            font: "WorkSansMedium",
+            font: "WorkSansSemiBold",
             content: "Grüezi Zürich — naïve café · € £ ¥ ©",
           },
         },
@@ -178,7 +178,7 @@ const document: Document = {
             x: 20,
             y: 323,
             size: 20,
-            font: "WorkSansMedium",
+            font: "WorkSansSemiBold",
             content: "office  affinity  efficient  ffi  fi  fl   (on)",
           },
         },
@@ -188,7 +188,7 @@ const document: Document = {
             x: 20,
             y: 294,
             size: 20,
-            font: "WorkSansMedium",
+            font: "WorkSansSemiBold",
             content: "office  affinity  efficient  ffi  fi  fl   (off)",
             features: { liga: false },
           },
@@ -209,7 +209,7 @@ const document: Document = {
             x: 20,
             y: 225,
             size: 10,
-            font: "WorkSansMedium",
+            font: "WorkSansSemiBold",
             content: "ON (default)",
           },
         },
@@ -229,7 +229,7 @@ const document: Document = {
             x: 20,
             y: 155,
             size: 10,
-            font: "WorkSansMedium",
+            font: "WorkSansSemiBold",
             content: "OFF ({ kern: false })",
           },
         },
@@ -250,7 +250,7 @@ const document: Document = {
             x: 20,
             y: 72,
             size: 10,
-            font: "WorkSansMedium",
+            font: "WorkSansSemiBold",
             content:
               "Both rows start at the same x; compare pair spacing and the final |.",
           },
