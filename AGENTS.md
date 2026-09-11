@@ -19,8 +19,8 @@ Document AST  ──►  Convert  ──►  PDF object model  ──►  Writer
 
 1. `src/structure.ts` — the AST you build. Node types via `AstTypesEnum`:
    `DOCUMENT` → (`info?`, `fonts`, `children`); `VIEWPORT` (a page);
-   `TEXT`; `IMAGE` (carries raw JPEG bytes); `FONT` (optionally carries raw
-   TrueType/OpenType bytes).
+   `TEXT`; `TEXTBOX` (wrapped/clipped text region); `IMAGE` (carries raw JPEG
+   bytes); `LINE`; `BOX`; `FONT` (optionally carries raw TrueType/OpenType bytes).
 2. `src/dataTypes/*` — PDF primitives (name, string, array, dictionary, stream,
    reference, operator, plainContent) as `factory` + `*ToString` serializer.
 3. `src/generators/*` — assemble primitives into PDF objects (Catalog, Pages,
@@ -63,6 +63,9 @@ files use `test`/`expect` without imports). Tests live next to source as
 - **Images:** the AST `IMAGE` node carries raw JPEG bytes in `attributes.data`;
   `src/image.ts` reads metadata from the header (no filesystem access) and embeds
   an ASCII85 + DCTDecode XObject. Each image gets a unique `Im<n>` resource name.
+- **Geometry:** `LINE` and `BOX` use top-left coordinates, render as unfilled
+  strokes, and accept optional `borderWidth` and normalized RGB `borderColour`
+  values that default to `1` and black respectively.
 - **Embedded fonts:** `FONT.data` is a `Uint8Array`. `fontkit` shapes each
   `TEXT` node as one run and subsets used glyphs. `kern`, `rlig`, `liga`,
   `clig`, `calt`, `locl`, `ccmp`, `mark`, and `mkmk` default to on. A
@@ -71,9 +74,14 @@ files use `test`/`expect` without imports). Tests live next to source as
   TrueType and CFF1 outlines are supported; CFF2 and font collections are
   rejected. The PDF uses Identity-H CIDs and `/ToUnicode` for Unicode
   extraction.
-- **Text-layout boundary:** there is no mixed-direction bidi/script itemization,
-  font fallback, or line layout. Font licensing remains the caller's
-  responsibility; OS/2 no-embedding/no-subsetting flags are enforced.
+- **Cross-renderer font hints:** `FONT.family` supplies the preferred SVG CSS
+  family and `FONT.weight` supplies its weight. Data-less PDF fonts remain
+  Helvetica, selecting Helvetica-Bold for weights of 700 or more. Optional
+  `TEXT.textAnchor` and `TEXTBOX.textAnchor` control start/middle/end anchoring.
+- **Text-layout boundary:** `TEXTBOX` performs simple whitespace word wrapping
+  and vertical limiting. There is no mixed-direction bidi/script itemization,
+  font fallback, hyphenation, or rich-text layout. Font licensing remains the
+  caller's responsibility; OS/2 no-embedding/no-subsetting flags are enforced.
 - **Byte accounting:** streams, xref, `startxref`, and `printDebug` use UTF-8
   byte lengths. ASCII85 streams include one trailing `~>` EOD marker.
 - **`attic/`** holds parked fragments and large local-only binaries; it is not

@@ -1,4 +1,3 @@
-import ascii85 from "ascii85";
 import {
   create as createFont,
   FontKitFont,
@@ -19,6 +18,7 @@ import { PdfReference } from "./dataTypes/reference";
 import { Stream } from "./dataTypes/stream";
 import { PlainContent } from "./generators/PlainContent";
 import { byteLength } from "./util/byteLength";
+import { ascii85Encode } from "./util/ascii85";
 
 export type ShapedGlyph = {
   cid: number;
@@ -62,10 +62,7 @@ const utf16Hex = (codePoints: Array<number>): string => {
 };
 
 const ascii85WithEod = (data: Uint8Array): string =>
-  `${ascii85
-    .encode(Buffer.from(data))
-    .toString()
-    .replace(/~>\s*$/, "")}~>`;
+  `${ascii85Encode(data)}~>`;
 
 const safePdfName = (value: string): string =>
   value.replace(/[^A-Za-z0-9_.-]/g, "_");
@@ -81,6 +78,16 @@ const defaultOpenTypeFeatures = [
   "mark",
   "mkmk",
 ];
+
+const featureSettings = (features?: OpenTypeFeatures) =>
+  Array.isArray(features)
+    ? Array.from(new Set([...defaultOpenTypeFeatures, ...features]))
+    : {
+        ...Object.fromEntries(
+          defaultOpenTypeFeatures.map((feature) => [feature, true]),
+        ),
+        ...(features || {}),
+      };
 
 const subsetTag = (index: number): string => {
   let value = Math.max(0, index);
@@ -152,15 +159,7 @@ export class EmbeddedFont {
       throw new Error("Cannot shape text after the font subset was finalized.");
     }
 
-    const featureSettings = Array.isArray(features)
-      ? Array.from(new Set([...defaultOpenTypeFeatures, ...features]))
-      : {
-          ...Object.fromEntries(
-            defaultOpenTypeFeatures.map((feature) => [feature, true]),
-          ),
-          ...(features || {}),
-        };
-    const run = this.font.layout(text, featureSettings);
+    const run = this.font.layout(text, featureSettings(features));
 
     return run.glyphs.map((glyph, index) => {
       const cid = this.subset.includeGlyph(glyph.id);
@@ -187,6 +186,20 @@ export class EmbeddedFont {
         yOffset: position.yOffset,
       };
     });
+  }
+
+  /** Measure shaped text in page units without adding glyphs to the subset. */
+  measureText(
+    text: string,
+    size: number,
+    features?: OpenTypeFeatures,
+  ): number {
+    const run = this.font.layout(text, featureSettings(features));
+    const advance = run.positions.reduce(
+      (width, position) => width + position.xAdvance,
+      0,
+    );
+    return (advance / this.unitsPerEm) * size;
   }
 
   /** The encoded, PDF-oriented subset. This finalizes the glyph collection. */

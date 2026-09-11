@@ -1,7 +1,8 @@
 # mini-pdf
 
 A tiny PDF writer in TypeScript. It turns a small, declarative document tree
-(an AST of pages, text and images) into the raw bytes of a valid PDF file.
+(an AST of pages, text, images, lines and boxes) into the raw bytes of a valid
+PDF file.
 
 > ⚠️ **Experimental / educational.** This is a learning project for
 > understanding the PDF file format from the ground up. It is not feature
@@ -11,8 +12,8 @@ A tiny PDF writer in TypeScript. It turns a small, declarative document tree
 
 You build a document tree (the AST), then `Writer(doc)` returns the PDF file as
 a string. The example below uses every node type: a font, a page (`VIEWPORT`),
-text and an embedded JPEG image. Image metadata is read from the bytes you
-pass — you only specify where it goes on the page.
+text, a wrapping text box, and an embedded JPEG image. Image metadata is read
+from the bytes you pass — you only specify where it goes on the page.
 
 ```ts
 import * as fs from "node:fs";
@@ -26,6 +27,21 @@ const doc = {
       type: AstTypesEnum.VIEWPORT,
       attributes: { mediaBox: [0, 0, 300, 200] },
       children: [
+        {
+          type: AstTypesEnum.LINE,
+          attributes: { x1: 20, y1: 20, x2: 280, y2: 20 },
+        },
+        {
+          type: AstTypesEnum.BOX,
+          attributes: {
+            x: 20,
+            y: 40,
+            width: 120,
+            height: 120,
+            borderWidth: 0.5,
+            borderColour: [1, 0, 1],
+          },
+        },
         {
           type: AstTypesEnum.IMAGE,
           attributes: {
@@ -46,6 +62,19 @@ const doc = {
             content: "hello world",
           },
         },
+        {
+          type: AstTypesEnum.TEXTBOX,
+          attributes: {
+            x: 160,
+            y: 40,
+            width: 120,
+            height: 120,
+            lineHeight: 14,
+            size: 12,
+            font: "F1",
+            content: "This text wraps inside the box while rendering.",
+          },
+        },
       ],
     },
   ],
@@ -58,6 +87,12 @@ fs.writeFileSync("hello.pdf", pdf);
 // the xref table and learning the file format.
 fs.writeFileSync("hello.debug.txt", printDebug(pdf));
 ```
+
+`TEXTBOX` uses top-left `x`/`y` coordinates. `width` controls word wrapping,
+`height` limits the rendered baselines, and `lineHeight` is the absolute
+baseline-to-baseline distance in page units. Explicit newlines start a new
+line. `textAnchor` may be `start`, `middle`, or `end`. When the referenced font
+contains `data`, wrapping and alignment use fontkit's shaped glyph advances.
 
 A runnable version lives in [examples/demo.ts](examples/demo.ts) — run it with
 `npm run demo`. It keeps the JPEG example and embeds Work Sans Medium and

@@ -11,6 +11,8 @@ import {
 } from "../dataTypes/dictonary";
 import { TextLine } from "../generators/TextLine";
 import { ShapedTextLine } from "../generators/ShapedTextLine";
+import { StrokeLine } from "../generators/Line";
+import { StrokeBox } from "../generators/Box";
 import { Catalog } from "../generators/Catalog";
 import { FontHelvetica } from "../generators/FontHelvetica";
 import { Page } from "../generators/Page";
@@ -19,6 +21,7 @@ import { InfoDictionary } from "../generators/Info";
 import { Stream } from "../dataTypes/stream";
 import { PdfReference } from "../dataTypes/reference/";
 import { EmbeddedFont } from "../font";
+import { layoutTextBox } from "../layout/TextBox";
 
 type ConvertContext = {
   embeddedFonts: { [fontId: string]: EmbeddedFont };
@@ -78,7 +81,7 @@ export const Convert = (
           : null;
         const { ref: refFont } = addObj(
           pdf,
-          embeddedFont ? null : FontHelvetica(pdfName(font.id)),
+          embeddedFont ? null : FontHelvetica(pdfName(font.id), font.weight),
         );
 
         pdf.fonts[font.id] = refFont;
@@ -128,7 +131,7 @@ export const Convert = (
 
       const { ref: refContent } = addObj(pdf, null);
 
-      const values = [];
+      const values: Array<PdfType> = [];
       const fontItems = [];
       const xObjectItems: Array<{ name: string; ref: PdfReference }> = [];
 
@@ -197,6 +200,38 @@ export const Convert = (
       replaceObj(pdf, refImg, imageObject);
       return { value: img, xObjects: [{ name, ref: refImg }] };
     }
+    case AstTypesEnum.LINE: {
+      const pageHeight =
+        parentObj.attributes.mediaBox[3] - parentObj.attributes.mediaBox[1];
+      const { x1, y1, x2, y2, borderWidth, borderColour } = obj.attributes;
+
+      return {
+        value: StrokeLine({
+          x1,
+          y1: pageHeight - y1,
+          x2,
+          y2: pageHeight - y2,
+          borderWidth,
+          borderColour,
+        }),
+      };
+    }
+    case AstTypesEnum.BOX: {
+      const pageHeight =
+        parentObj.attributes.mediaBox[3] - parentObj.attributes.mediaBox[1];
+      const { x, y, width, height, borderWidth, borderColour } = obj.attributes;
+
+      return {
+        value: StrokeBox({
+          x,
+          y: pageHeight - y - height,
+          width,
+          height,
+          borderWidth,
+          borderColour,
+        }),
+      };
+    }
     case AstTypesEnum.TEXT: {
       const fontId = obj.attributes.font;
       if (!pdf.fonts[fontId]) {
@@ -225,6 +260,61 @@ export const Convert = (
           });
 
       return { value: textLine, fonts: [fontId] };
+    }
+    case AstTypesEnum.TEXTBOX: {
+      const fontId = obj.attributes.font;
+      if (!pdf.fonts[fontId]) {
+        throw new Error(`Unknown font id: "${fontId}".`);
+      }
+
+      const embeddedFont = context.embeddedFonts[fontId];
+      const values: Array<PdfType> = [];
+      const measureText = embeddedFont
+        ? (text: string) =>
+            embeddedFont.measureText(
+              text,
+              obj.attributes.size,
+              obj.attributes.features,
+            )
+        : undefined;
+      layoutTextBox(obj.attributes, measureText).forEach((line) => {
+        if (line.content === "") return;
+
+        if (embeddedFont) {
+          const glyphs = embeddedFont.shape(
+            line.content,
+            obj.attributes.features,
+          );
+          values.push(
+            ...ShapedTextLine({
+              x: line.x,
+              y:
+                parentObj.attributes.mediaBox[3] -
+                parentObj.attributes.mediaBox[1] -
+                line.y,
+              size: obj.attributes.size,
+              font: fontId,
+              unitsPerEm: embeddedFont.unitsPerEm,
+              glyphs,
+            }),
+          );
+        } else {
+          values.push(
+            ...TextLine({
+              x: line.x,
+              y:
+                parentObj.attributes.mediaBox[3] -
+                parentObj.attributes.mediaBox[1] -
+                line.y,
+              size: obj.attributes.size,
+              font: fontId,
+              content: line.content,
+            }),
+          );
+        }
+      });
+
+      return { value: values, fonts: [fontId] };
     }
   }
 };

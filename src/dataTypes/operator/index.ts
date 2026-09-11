@@ -19,6 +19,12 @@ export enum PdfOperatorValues {
   GRAPHICS_STATE_RESTORE = "Q",
   MATRIX_MODIFY = "cm",
   IMAGE_PAINT = "Do",
+  PATH_LINE_WIDTH = "w",
+  PATH_MOVE = "m",
+  PATH_LINE = "l",
+  PATH_RECTANGLE = "re",
+  PATH_STROKE = "S",
+  PATH_STROKE_COLOR_RGB = "RG",
 }
 
 export type PdfOperator = {

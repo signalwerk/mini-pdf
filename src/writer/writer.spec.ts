@@ -10,7 +10,7 @@ const imageData = fs.readFileSync(
   path.join(here, "../../examples/assets/sample.jpg"),
 );
 
-// An AST that exercises every node type: DOCUMENT → FONT + VIEWPORT → IMAGE + TEXT.
+// An AST that exercises every node type.
 const document: Document = {
   type: AstTypesEnum.DOCUMENT,
   info: { title: "mini-pdf", author: "tester", creator: "mini-pdf" },
@@ -20,6 +20,21 @@ const document: Document = {
       type: AstTypesEnum.VIEWPORT,
       attributes: { mediaBox: [0, 0, 300, 200] },
       children: [
+        {
+          type: AstTypesEnum.LINE,
+          attributes: {
+            x1: 10,
+            y1: 20,
+            x2: 30,
+            y2: 40,
+            borderWidth: 0.5,
+            borderColour: [1, 0, 1],
+          },
+        },
+        {
+          type: AstTypesEnum.BOX,
+          attributes: { x: 50, y: 60, width: 70, height: 80 },
+        },
         {
           type: AstTypesEnum.IMAGE,
           attributes: {
@@ -38,6 +53,19 @@ const document: Document = {
             size: 24,
             font: "F1",
             content: "mini-pdf",
+          },
+        },
+        {
+          type: AstTypesEnum.TEXTBOX,
+          attributes: {
+            x: 20,
+            y: 50,
+            width: 40,
+            height: 24,
+            lineHeight: 8,
+            size: 8,
+            font: "F1",
+            content: "one two three four",
           },
         },
       ],
@@ -60,6 +88,13 @@ test("Writer renders an AST containing every element type", () => {
 
   // the text node
   expect(pdf).toContain("(mini-pdf) Tj");
+  expect(pdf).toContain("(one two) Tj");
+  expect(pdf).toContain("(three) Tj");
+  expect(pdf).toContain("(four) Tj");
+
+  // top-left line/box coordinates converted to PDF page coordinates
+  expect(pdf).toContain("0.5 w\n1 0 1 RG\n10 180 m\n30 160 l\nS");
+  expect(pdf).toContain("1 w\n0 0 0 RG\n50 60 70 80 re\nS");
 
   // the image node: a DCTDecode XObject painted via a uniquely named resource
   expect(pdf).toContain("/Subtype /Image");

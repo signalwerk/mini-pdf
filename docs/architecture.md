@@ -18,8 +18,14 @@ discriminated by `AstTypesEnum`:
 - `VIEWPORT` — one page, with a `mediaBox` and child content.
 - `TEXT` — a line of text at `x/y`, with `size`, `font`, and optional OpenType
   `features`.
+- `TEXTBOX` — a top-left text region with width, height and absolute line
+  height; each renderer wraps and clips its content to that region.
 - `IMAGE` — a JPEG placement; carries the raw bytes (`data`) plus the on-page
   rectangle. Pixel size, bit depth and color space are read from the JPEG.
+- `LINE` — a stroked line using top-left `x1/y1/x2/y2` coordinates.
+- `BOX` — an unfilled stroked rectangle using top-left `x/y/width/height`.
+  Both geometry nodes accept optional `borderWidth` and normalized RGB
+  `borderColour` values, defaulting to `1` and black.
 - `FONT` — a font declaration referenced by `id`; optional `data: Uint8Array`
   contains a single TrueType/OpenType face to embed. Without `data`, the
   declaration uses built-in Helvetica.
@@ -75,6 +81,9 @@ It maps:
   trailer by `Writer`)
 - `VIEWPORT` → a Page + its Resources dict + a content Stream
 - `TEXT` → text-drawing operators appended to the page content
+- `TEXTBOX` → internally wrapped text-drawing operators clipped by line count;
+  embedded fonts are measured from fontkit's shaped glyph advances
+- `LINE` / `BOX` → path operators appended to the page content
 - `IMAGE` → a DCTDecode XObject (built in [`src/image.ts`](../src/image.ts) from
   the JPEG bytes) plus the operators that paint it; each image gets a unique
   resource name (`Im<n>`) so multiple images on a page don't collide

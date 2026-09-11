@@ -4,12 +4,21 @@ export enum AstTypesEnum {
   DOCUMENT = "DOCUMENT",
   VIEWPORT = "VIEWPORT",
   TEXT = "TEXT",
-  // LINE = "LINE",
+  TEXTBOX = "TEXTBOX",
+  LINE = "LINE",
+  BOX = "BOX",
   FONT = "FONT",
   IMAGE = "IMAGE",
 }
 
-export type AstTypes = Document | Viewport | Text | Image;
+export type AstTypes =
+  | Document
+  | Viewport
+  | Text
+  | TextBox
+  | Image
+  | Line
+  | BoxNode;
 
 export type Document = {
   type: AstTypesEnum.DOCUMENT;
@@ -39,6 +48,10 @@ export type Info = {
 export type Font = {
   type: AstTypesEnum.FONT;
   id: string;
+  /** Preferred CSS family name for SVG output. */
+  family?: string;
+  /** Font weight. SVG uses it directly; built-in PDF fonts use bold at 700+. */
+  weight?: number;
   /**
    * Raw bytes of a TrueType/OpenType font to embed. When omitted, the font
    * keeps the original built-in Helvetica behaviour.
@@ -72,20 +85,45 @@ export type Viewport = {
   attributes: {
     mediaBox: Box;
   };
-  children: Array<Text | Image>;
+  children: Array<Text | TextBox | Image | Line | BoxNode>;
 };
 
-export type Box = FixedSizeArray<4, number>;
+export type MediaBox = FixedSizeArray<4, number>;
 
-// export type Line = {
-//   type: AstTypesEnum.LINE;
-//   attributes: {
-//     x1: number;
-//     y1: number;
-//     x2: number;
-//     y2: number;
-//   };
-// };
+/** @deprecated Use `MediaBox` for viewport bounds. */
+export type Box = MediaBox;
+
+/** Red, green and blue components normalized to the inclusive range 0–1. */
+export type RgbColor = FixedSizeArray<3, number>;
+
+export type Line = {
+  type: AstTypesEnum.LINE;
+  attributes: {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+    /** Border width in page units. Defaults to 1. */
+    borderWidth?: number;
+    /** Border colour. Defaults to black. */
+    borderColour?: RgbColor;
+  };
+};
+
+export type BoxNode = {
+  type: AstTypesEnum.BOX;
+  attributes: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    /** Border width in page units. Defaults to 1. */
+    borderWidth?: number;
+    /** Border colour. Defaults to black. */
+    borderColour?: RgbColor;
+  };
+};
+
 export type Text = {
   type: AstTypesEnum.TEXT;
   attributes: {
@@ -94,11 +132,31 @@ export type Text = {
     size: number;
     font: string;
     content: string;
+    /** Horizontal anchor used by SVG text. Defaults to `start`. */
+    textAnchor?: "start" | "middle" | "end";
     /**
      * Optional OpenType feature overrides. Browser-style required/common
      * shaping features (`kern`, `rlig`, `liga`, `clig`, `calt`, `locl`,
      * `ccmp`, `mark`, and `mkmk`) are enabled by default for embedded fonts.
      */
+    features?: OpenTypeFeatures;
+  };
+};
+
+/** A top-left text region that performs word wrapping during rendering. */
+export type TextBox = {
+  type: AstTypesEnum.TEXTBOX;
+  attributes: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    /** Absolute baseline-to-baseline distance in page units. */
+    lineHeight: number;
+    size: number;
+    font: string;
+    content: string;
+    textAnchor?: "start" | "middle" | "end";
     features?: OpenTypeFeatures;
   };
 };

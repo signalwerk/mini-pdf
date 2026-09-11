@@ -117,3 +117,16 @@ test("Generator for FontHelvetica", () => {
     ]),
   );
 });
+
+test("Generator for bold FontHelvetica", () => {
+  const font = FontHelvetica(pdfName("F1"), 800);
+
+  expect(font).toMatchObject(
+    pdfDictionary([
+      pdfDictionaryPair(pdfName("Type"), pdfName("Font")),
+      pdfDictionaryPair(pdfName("Subtype"), pdfName("Type1")),
+      pdfDictionaryPair(pdfName("Name"), pdfName("F1")),
+      pdfDictionaryPair(pdfName("BaseFont"), pdfName("Helvetica-Bold")),
+    ]),
+  );
+});

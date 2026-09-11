@@ -41,7 +41,6 @@
     "vitest": "^1.5.0"
   },
   "dependencies": {
-    "ascii85": "^1.0.2",
     "fixed-size-array": "^0.1.1",
     "fontkit": "^2.0.4"
   }

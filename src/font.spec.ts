@@ -111,6 +111,24 @@ test("Writer embeds a subset TrueType font as a Unicode Type0 font", () => {
   expect(pdf).toMatch(/\/BaseFont \/[A-Z]{6}\+NotoSans-Regular/);
 });
 
+test("measures text from fontkit shaped advances", () => {
+  const embeddedFont = new EmbeddedFont(fontData, "FTest", 0);
+  const size = 12;
+  const run = embeddedFont.font.layout(
+    "AV fi",
+    Object.fromEntries(defaultOpenTypeFeatures.map((tag) => [tag, true])),
+  );
+  const expected =
+    (run.positions.reduce(
+      (width, position) => width + position.xAdvance,
+      0,
+    ) /
+      embeddedFont.unitsPerEm) *
+    size;
+
+  expect(embeddedFont.measureText("AV fi", size)).toBeCloseTo(expected, 6);
+});
+
 test("kerning changes the second glyph's text matrix position", () => {
   const defaultPositions = glyphPositions(Writer(documentWithText("AV")));
   const kerned = glyphPositions(
